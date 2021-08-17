@@ -11,7 +11,7 @@ public class UserDTO {
 
     private String userEmail;
 
-    private String userCompany;
+    private String companyName;
 
     private Roles role;
 
@@ -47,12 +47,12 @@ public class UserDTO {
         this.userEmail = userEmail;
     }
 
-    public String getUserCompany() {
-        return userCompany;
+    public String getcompanyName() {
+        return companyName;
     }
 
-    public void setUserCompany(String userCompany) {
-        this.userCompany = userCompany;
+    public void setcompanyName(String userCompany) {
+        this.companyName=userCompany;
     }
 
     public Roles getRole() {

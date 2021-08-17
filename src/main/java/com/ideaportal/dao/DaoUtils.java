@@ -52,7 +52,7 @@ public class DaoUtils {
     public int getCountByEmail(String userEmail) 
     {
 
-    	return jdbcTemplate.execute("select user_id from User where user_email=?", (PreparedStatementCallback<Integer>) ps -> {
+    	return jdbcTemplate.execute("select user_id from User where user_email_id=?", (PreparedStatementCallback<Integer>) ps -> {
 			ps.setString(1, userEmail);
 
 			ResultSet resultSet = ps.executeQuery();
