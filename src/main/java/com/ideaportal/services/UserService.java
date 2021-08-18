@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +21,7 @@ import com.ideaportal.exception.InvalidRoleException;
 import com.ideaportal.exception.UserAuthException;
 import com.ideaportal.models.Login;
 import com.ideaportal.models.ResponseMessage;
+import com.ideaportal.models.Themes;
 import com.ideaportal.models.User;
 
 import io.jsonwebtoken.Jwts;
@@ -110,7 +112,31 @@ public class UserService {
 	        return responseMessage;
 	    }
 
-	
+	 //Service to get all the themes submitted by client partners
+		public ResponseMessage<List<Themes>> getAllThemesResponseMessage() 
+		{
+			List<Themes> list=userDAO.getAllThemesList();
+			
+			ResponseMessage<List<Themes>> responseMessage=new ResponseMessage<>();
+			
+			int size=list.size();
+			
+			if(size==0)
+			{
+				responseMessage.setResult(null);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("OOPS!! No Themes been uploaded by Client Partner.Please try again later!!");
+
+			}
+			else
+			{
+				responseMessage.setResult(list);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("List of all themes");
+				responseMessage.setTotalElements(size);
+			}
+			return responseMessage;
+		}
 	
 	
 

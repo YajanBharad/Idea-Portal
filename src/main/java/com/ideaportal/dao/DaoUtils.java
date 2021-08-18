@@ -1,6 +1,9 @@
 package com.ideaportal.dao;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -87,4 +90,14 @@ public class DaoUtils {
 		return optionalThemesCategory.orElse(null);
 	}
 	
+    public List<Themes> buildThemesList(ResultSet resultSet) throws SQLException 
+	{
+		List<Themes> list=new ArrayList<>();
+		while(resultSet.next())
+		{
+			Optional<Themes> optional=themesRepository.findById(resultSet.getLong(1));
+			list.add(optional.orElse(null));
+		}
+		return list;
+	}
 }
