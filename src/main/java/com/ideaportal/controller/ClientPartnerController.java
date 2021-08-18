@@ -2,8 +2,8 @@ package com.ideaportal.controller;
 
 
 import java.io.File;
-
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletConfig;
@@ -100,8 +100,9 @@ public class ClientPartnerController {
 		themes.setThemeName(themeName);
 		themes.setThemeDescription(themeDesc);
 		themes.setThemesCategory(themesCategory);
-
+		themes.setCreationDate(new Date());
 		String userName=dbUser.getUserName();
+		themes.setUserId(dbUser);
 
 
 

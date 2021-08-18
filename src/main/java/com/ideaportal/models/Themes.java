@@ -8,6 +8,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,9 +19,11 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Themes {
 	
 	@Id
@@ -34,8 +37,8 @@ public class Themes {
 	@Column(name = "theme_description",columnDefinition ="TEXT",nullable=false)
 	private String themeDescription;
 	
-	@OneToMany(mappedBy = "theme")
-	@JsonManagedReference("theme_files")
+	@OneToMany(fetch = FetchType.LAZY,mappedBy = "theme")
+	@JsonIgnore
 	private List<ThemeIdeaFiles> themeFiles;
 	
 	@ManyToOne(cascade = {CascadeType.ALL})

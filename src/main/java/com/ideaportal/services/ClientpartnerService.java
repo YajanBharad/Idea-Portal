@@ -2,6 +2,7 @@ package com.ideaportal.services;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import com.ideaportal.models.Themes;
 @Service
 public class ClientpartnerService {
 	
+	@Autowired
      ClientPartnerDAO clientPartnerDAO;
 
 	public void saveArtifacts(List<ThemeIdeaFiles> artifactList, long themeID) {
