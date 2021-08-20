@@ -3,6 +3,7 @@ package com.ideaportal.dao;
 
 
 import java.sql.ResultSet;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,9 +12,11 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Repository;
 
 import com.ideaportal.exception.InvalidRoleException;
+import com.ideaportal.models.Ideas;
 import com.ideaportal.models.Login;
 import com.ideaportal.models.Roles;
 import com.ideaportal.models.User;
+import com.ideaportal.repo.IdeasRepository;
 import com.ideaportal.repo.UserRepository;
 @Repository
 public class UserDAO {
@@ -21,6 +24,9 @@ public class UserDAO {
 	
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	IdeasRepository ideasRepository;
 	
 	@Autowired
 	
@@ -64,5 +70,13 @@ public class UserDAO {
 				return null;
 			});
 	    }
+	 public Ideas getIdea(long ideaID) 
+		{
+			try
+			{
+				return ideasRepository.findById(ideaID).orElse(null);
+			}catch(NoSuchElementException e) {return null;}
+		}
+	 
 
 }

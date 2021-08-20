@@ -1,6 +1,9 @@
 package com.ideaportal.dao;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -10,9 +13,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.stereotype.Repository;
 
+import com.ideaportal.models.Ideas;
 import com.ideaportal.models.Themes;
 import com.ideaportal.models.ThemesCategory;
 import com.ideaportal.models.User;
+import com.ideaportal.repo.IdeasRepository;
 import com.ideaportal.repo.ThemesCategoryRepository;
 import com.ideaportal.repo.ThemesRepository;
 import com.ideaportal.repo.UserRepository;
@@ -30,6 +35,9 @@ public class DaoUtils {
 	
 	@Autowired
 	JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	IdeasRepository ideasRepository;
 	public User findByUserId(final long userID) {
         User user = null;
         try {
@@ -81,6 +89,17 @@ public class DaoUtils {
     	
 	
     }
+    public List<Ideas> buildList(ResultSet resultSet) throws SQLException
+	{
+		List<Ideas> list=new ArrayList<>();
+		
+		while(resultSet.next())
+		{
+			Optional<Ideas> optional=ideasRepository.findById(resultSet.getLong(1));
+			list.add(optional.orElse(null));
+		}
+		return list;
+	}
     public ThemesCategory findThemeCategory(long themeCategoryID){
 		Optional<ThemesCategory> optionalThemesCategory = themesCategoryRepository.findById(themeCategoryID);
 

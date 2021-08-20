@@ -7,6 +7,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,8 +18,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ideaportal.dao.DaoUtils;
 import com.ideaportal.dao.UserDAO;
 import com.ideaportal.dto.UserDTO;
-
+import com.ideaportal.exception.IdeaNotPresentInThemeException;
 import com.ideaportal.exception.UserAuthException;
+import com.ideaportal.models.Ideas;
 import com.ideaportal.models.Login;
 import com.ideaportal.models.ResponseMessage;
 
@@ -54,13 +57,23 @@ public class UserController {
 	public ResponseEntity<ResponseMessage<User>> loginUser(@RequestBody Login userDetails) throws UserAuthException 
 	{
 	   
-         
+	
+
         ResponseMessage<User> responseMessage = userService.checkCredentials(userDetails);
        
 
 		return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
 
     }
-	
+	  @GetMapping(value="/idea/{ideaID}")
+	    public ResponseEntity<ResponseMessage<Ideas>> getIdeaByID(@PathVariable ("ideaID") long ideaID) throws IdeaNotPresentInThemeException {
+		  
+		  ResponseMessage<Ideas> responseMessage=userService.getIdeaByIDResponseMessage(ideaID);
+
+	        
+		  return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
+	        
+	        
+	  }
 	
 }

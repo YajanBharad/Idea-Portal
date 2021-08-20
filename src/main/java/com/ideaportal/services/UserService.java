@@ -18,6 +18,7 @@ import com.ideaportal.dao.DaoUtils;
 import com.ideaportal.dao.UserDAO;
 import com.ideaportal.exception.InvalidRoleException;
 import com.ideaportal.exception.UserAuthException;
+import com.ideaportal.models.Ideas;
 import com.ideaportal.models.Login;
 import com.ideaportal.models.ResponseMessage;
 import com.ideaportal.models.User;
@@ -109,6 +110,29 @@ public class UserService {
 	        
 	        return responseMessage;
 	    }
+	 public ResponseMessage<Ideas> getIdeaByIDResponseMessage(long ideaID) 
+		{
+			ResponseMessage<Ideas> responseMessage=new ResponseMessage<>();
+			
+			Ideas idea=userDAO.getIdea(ideaID);
+			if(idea==null)
+			{
+				responseMessage.setResult(null);
+				responseMessage.setStatus(HttpStatus.NOT_FOUND.value());
+				responseMessage.setStatusText("Idea not found");
+
+			}
+			else
+			{
+				responseMessage.setResult(idea);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("founded");
+				responseMessage.setTotalElements(1);
+
+			}
+			return responseMessage;
+
+		}
 
 	
 	

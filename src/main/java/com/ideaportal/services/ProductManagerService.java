@@ -33,5 +33,29 @@ public class ProductManagerService {
 	 public void saveArtifacts(final List<ThemeIdeaFiles> artifactList, final long ideaID) {
 	        this.pmDAO.saveArtifacts(artifactList, ideaID);
 	    }
+	 
+
+		public ResponseMessage<List<Ideas>> getMySubmittedIdeasResponseMessage(long userID) 
+		{
+			ResponseMessage<List<Ideas>> responseMessage=new ResponseMessage<>();
+			
+			List<Ideas> list=pmDAO.getMyIdeasList(userID);
+			
+			int size=list.size();
+			
+			if(size==0)
+			{
+				responseMessage.setResult(null);
+				responseMessage.setStatusText("No themes were found");
+			}
+			else
+			{
+				responseMessage.setResult(list);
+				responseMessage.setStatusText("List all ideas");
+			}
+			responseMessage.setTotalElements(list.size());
+			responseMessage.setStatus(HttpStatus.OK.value());
+			return responseMessage;
+		}
 		
 }
