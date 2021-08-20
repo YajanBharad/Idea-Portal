@@ -106,4 +106,14 @@ public class DaoUtils {
 		return optionalThemesCategory.orElse(null);
 	}
 	
+    public List<Themes> buildThemesList(ResultSet resultSet) throws SQLException 
+	{
+		List<Themes> list=new ArrayList<>();
+		while(resultSet.next())
+		{
+			Optional<Themes> optional=themesRepository.findById(resultSet.getLong(1));
+			list.add(optional.orElse(null));
+		}
+		return list;
+	}
 }

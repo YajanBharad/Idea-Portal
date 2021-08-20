@@ -5,6 +5,9 @@ package com.ideaportal.dao;
 import java.sql.ResultSet;
 import java.util.NoSuchElementException;
 
+import java.util.List;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCallback;
@@ -15,6 +18,7 @@ import com.ideaportal.exception.InvalidRoleException;
 import com.ideaportal.models.Ideas;
 import com.ideaportal.models.Login;
 import com.ideaportal.models.Roles;
+import com.ideaportal.models.Themes;
 import com.ideaportal.models.User;
 import com.ideaportal.repo.IdeasRepository;
 import com.ideaportal.repo.UserRepository;
@@ -26,7 +30,11 @@ public class UserDAO {
 	UserRepository userRepository;
 	
 	@Autowired
+
 	IdeasRepository ideasRepository;
+
+	DaoUtils utils;
+
 	
 	@Autowired
 	
@@ -79,4 +87,14 @@ public class UserDAO {
 		}
 	 
 
+	 //Executes a select * query on themes table 
+		public List<Themes> getAllThemesList()
+		{
+			return jdbcTemplate.execute("select * from themes", (PreparedStatementCallback<List<Themes>>) ps -> {
+
+				ResultSet rSet=ps.executeQuery();
+
+				return utils.buildThemesList(rSet);
+			});
+		}
 }

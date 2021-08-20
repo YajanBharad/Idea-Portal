@@ -3,6 +3,8 @@ package com.ideaportal.controller;
 
 
 
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +25,7 @@ import com.ideaportal.exception.UserAuthException;
 import com.ideaportal.models.Ideas;
 import com.ideaportal.models.Login;
 import com.ideaportal.models.ResponseMessage;
-
+import com.ideaportal.models.Themes;
 import com.ideaportal.models.User;
 import com.ideaportal.services.UserService;
 
@@ -65,6 +67,7 @@ public class UserController {
 		return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
 
     }
+
 	  @GetMapping(value="/idea/{ideaID}")
 	    public ResponseEntity<ResponseMessage<Ideas>> getIdeaByID(@PathVariable ("ideaID") long ideaID) throws IdeaNotPresentInThemeException {
 		  
@@ -76,4 +79,39 @@ public class UserController {
 	        
 	  }
 	
+	
+    
+    @GetMapping(value="/themes")
+    public ResponseEntity<ResponseMessage<List<Themes>>> getAllThemes()
+    {
+
+        ResponseMessage<List<Themes>> responseMessage = userService.getAllThemesResponseMessage();
+        
+        return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
+    }
+    
+    //Function to get a theme by id
+    @GetMapping(value = "/themes/{id}")
+    public ResponseEntity<ResponseMessage<Themes>> getThemeByID(@PathVariable("id")String themeID) throws Exception {
+
+	    Themes themes;
+	    
+	    themes = utils.findThemeByID(Long.parseLong(themeID));
+
+        ResponseMessage<Themes> responseMessage = new ResponseMessage<>();
+
+        if(themes==null) {
+            throw new Exception("No themes present");
+        }
+	    else 
+	    {
+            responseMessage.setResult(themes);
+            responseMessage.setStatus(HttpStatus.OK.value());
+            responseMessage.setStatusText("Theme sent successfully");
+            responseMessage.setTotalElements(1);
+        }
+
+        return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
+    }
+
 }
