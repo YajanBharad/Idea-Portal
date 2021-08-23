@@ -5,6 +5,7 @@ package com.ideaportal.controller;
 
 import java.util.List;
 
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ideaportal.dao.DaoUtils;
 import com.ideaportal.dao.UserDAO;
 import com.ideaportal.dto.UserDTO;
-import com.ideaportal.exception.IdeaNotPresentInThemeException;
 import com.ideaportal.exception.UserAuthException;
 import com.ideaportal.models.Ideas;
 import com.ideaportal.models.Login;
@@ -69,7 +69,7 @@ public class UserController {
     }
 
 	  @GetMapping(value="/idea/{ideaID}")
-	    public ResponseEntity<ResponseMessage<Ideas>> getIdeaByID(@PathVariable ("ideaID") long ideaID) throws IdeaNotPresentInThemeException {
+	    public ResponseEntity<ResponseMessage<Ideas>> getIdeaByID(@PathVariable ("ideaID") long ideaID) throws Exception {
 		  
 		  ResponseMessage<Ideas> responseMessage=userService.getIdeaByIDResponseMessage(ideaID);
 

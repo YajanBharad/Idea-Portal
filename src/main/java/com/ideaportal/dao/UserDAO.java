@@ -33,6 +33,7 @@ public class UserDAO {
 
 	IdeasRepository ideasRepository;
 
+	@Autowired
 	DaoUtils utils;
 
 	

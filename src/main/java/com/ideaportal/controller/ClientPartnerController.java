@@ -147,6 +147,7 @@ public class ClientPartnerController {
 					
 					thf.setFileName(fileName);
 					thflist.add(thf);
+					themes.setThemeFiles(thflist);
 				}
 			}
 		}

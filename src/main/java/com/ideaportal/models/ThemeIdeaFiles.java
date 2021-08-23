@@ -1,6 +1,7 @@
 package com.ideaportal.models;
 
 import javax.persistence.CascadeType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+
+
 
 @Entity
 @Table(name ="theme_idea_files")
@@ -24,7 +30,7 @@ public class ThemeIdeaFiles {
 	@Column(name="file_type",columnDefinition = "TEXT",nullable = false)
 	private String fileType;
 	@ManyToOne(cascade = {CascadeType.ALL})
-	@JoinColumn(name="theme_id")
+	@JoinColumn(name = "theme_id")
 	private Themes theme;
 	@ManyToOne(cascade = {CascadeType.ALL})
 	@JoinColumn(name="idea_id")
@@ -86,7 +92,7 @@ public class ThemeIdeaFiles {
 	public void setFileType(String fileType) {
 		this.fileType = fileType;
 	}
-
+	@JsonBackReference
 	public  Themes getThemeId() {
 		return this.theme;
 	}

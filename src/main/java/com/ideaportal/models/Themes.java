@@ -2,6 +2,8 @@ package com.ideaportal.models;
 
 
 import java.util.Date;
+
+
 import java.util.List;
 
 import javax.persistence.Basic;
@@ -19,11 +21,11 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Themes {
 	
 	@Id
@@ -37,8 +39,7 @@ public class Themes {
 	@Column(name = "theme_description",columnDefinition ="TEXT",nullable=false)
 	private String themeDescription;
 	
-	@OneToMany(fetch = FetchType.LAZY,mappedBy = "theme")
-	@JsonIgnore
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "theme")
 	private List<ThemeIdeaFiles> themeFiles;
 	
 	@ManyToOne(cascade = {CascadeType.ALL})
@@ -94,6 +95,7 @@ public class Themes {
 	public void setThemeDescription(String themeDescription) {
 		this.themeDescription = themeDescription;
 	}
+	@JsonManagedReference
 	public List<ThemeIdeaFiles> getThemeFiles() {
 		return themeFiles;
 	}
