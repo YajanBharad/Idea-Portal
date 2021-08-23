@@ -5,8 +5,10 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -30,14 +32,14 @@ public class Ideas {
 	private String ideaDescription;
 	
 	@OneToMany(mappedBy = "idea")
-	@JsonManagedReference("idea_files")
+	@JsonManagedReference(value = "idea_files")
 	private List<ThemeIdeaFiles> ideaFiles;
 	
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.ALL})
 	@JoinColumn(name="theme_id")
 	private Themes theme;
 	
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.ALL})
 	@JoinColumn(name="user_id")
 	private User user;
 	
@@ -58,7 +60,7 @@ public class Ideas {
 		this.user = user;
 		this.ideaDate = ideaDate;
 	}
-
+	
 	public long getIdeaId() {
 		return ideaId;
 	}
@@ -74,7 +76,7 @@ public class Ideas {
 	public void setIdeaDescription(String ideaDescription) {
 		this.ideaDescription = ideaDescription;
 	}
-
+	@JsonManagedReference
 	public List<ThemeIdeaFiles> getIdeaFiles() {
 		return ideaFiles;
 	}

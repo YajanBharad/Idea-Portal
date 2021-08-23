@@ -4,9 +4,9 @@ package com.ideaportal.dao;
 
 import java.sql.ResultSet;
 import java.util.NoSuchElementException;
-
+import java.util.LinkedHashMap;
 import java.util.List;
-
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -98,4 +98,14 @@ public class UserDAO {
 				return utils.buildThemesList(rSet);
 			});
 		}
+		   public List<Ideas> getAllIdeas() {
+
+				return jdbcTemplate.execute("select * from ideas", (PreparedStatementCallback<List<Ideas>>) ps -> {
+					ResultSet resultSet=ps.executeQuery();
+
+					Map<String, Integer> resultMap = new LinkedHashMap<>();
+
+					return utils.buildList(resultSet);
+				});
+		   }
 }

@@ -78,7 +78,14 @@ public class UserController {
 	        
 	        
 	  }
-	
+	  @GetMapping(value = "ideas")
+	    public ResponseEntity<ResponseMessage<List<Ideas>>> getAllIdeas() {
+	       
+
+	        ResponseMessage<List<Ideas>> responseMessage = userService.getAllIdeas();
+
+	        return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
+	    }
 	
     
     @GetMapping(value="/themes")

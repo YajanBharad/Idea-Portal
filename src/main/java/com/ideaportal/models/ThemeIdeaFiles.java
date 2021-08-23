@@ -32,8 +32,9 @@ public class ThemeIdeaFiles {
 	@ManyToOne(cascade = {CascadeType.ALL})
 	@JoinColumn(name = "theme_id")
 	private Themes theme;
-	@ManyToOne(cascade = {CascadeType.ALL})
+	@ManyToOne
 	@JoinColumn(name="idea_id")
+	@JsonBackReference(value = "idea_files")
 	private Ideas idea;
 	  @ManyToOne
 	    @JoinColumn(name = "user_id")
@@ -100,7 +101,7 @@ public class ThemeIdeaFiles {
 	public void setThemeId(Themes themeId) {
 		this.theme = themeId;
 	}
-
+	
 	public Ideas getIdeaId() {
 		return this.idea;
 	}

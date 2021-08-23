@@ -161,6 +161,18 @@ public class UserService {
 			}
 			return responseMessage;
 		}
+		public ResponseMessage<List<Ideas>> getAllIdeas() {
+
+	    	List<Ideas> listOfIdeas = userDAO.getAllIdeas();
+
+	    	ResponseMessage<List<Ideas>> responseMessage = new ResponseMessage<>();
+	    	responseMessage.setResult(listOfIdeas);
+	    	responseMessage.setStatus(HttpStatus.OK.value());
+			responseMessage.setStatusText("list of ideas");
+	    	responseMessage.setTotalElements(listOfIdeas.size());
+
+	    	return responseMessage;
+		}
 	
 	
 
