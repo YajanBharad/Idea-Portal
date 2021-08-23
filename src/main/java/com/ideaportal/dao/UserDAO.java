@@ -100,7 +100,7 @@ public class UserDAO {
 		}
 		   public List<Ideas> getAllIdeas() {
 
-				return jdbcTemplate.execute("select * from ideas", (PreparedStatementCallback<List<Ideas>>) ps -> {
+				return jdbcTemplate.execute("select * from Ideas", (PreparedStatementCallback<List<Ideas>>) ps -> {
 					ResultSet resultSet=ps.executeQuery();
 
 					Map<String, Integer> resultMap = new LinkedHashMap<>();
