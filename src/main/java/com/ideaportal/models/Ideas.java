@@ -8,6 +8,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -30,8 +31,7 @@ public class Ideas {
 	@Column(name="idea_description",columnDefinition = "TEXT",nullable = false)
 	private String ideaDescription;
 	
-	@OneToMany(mappedBy = "idea")
-	@JsonManagedReference(value = "idea_files")
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "theme")
 	private List<ThemeIdeaFiles> ideaFiles;
 	
 	@ManyToOne(cascade = {CascadeType.ALL})

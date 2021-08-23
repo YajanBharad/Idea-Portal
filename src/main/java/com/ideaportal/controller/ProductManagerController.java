@@ -118,14 +118,13 @@ public class ProductManagerController {
 					ThemeIdeaFiles thf = new ThemeIdeaFiles();
 
 					thf.setIdeaId(idea);
+					thf.setThemeId(themes);
 					thf.setUser(user);
-						thf.setThemeideaUrl(mainURL + File.separator + uploads_constant + File.separator + fileName);
-					
-					
+					thf.setThemeideaUrl(mainURL + File.separator + uploads_constant + File.separator + fileName);
 					thf.setFileType(FilenameUtils.getExtension(fileName));
-				
-
+					thf.setFileName(fileName);
 					thfList.add(thf);
+					idea.setIdeaFiles(thfList);
 				}
 			
 		}
