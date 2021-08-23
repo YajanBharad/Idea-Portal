@@ -92,18 +92,21 @@ public class UserDAO {
 		public List<Themes> getAllThemesList()
 		{
 			return jdbcTemplate.execute("select * from themes", (PreparedStatementCallback<List<Themes>>) ps -> {
-
+				
 				ResultSet rSet=ps.executeQuery();
 
 				return utils.buildThemesList(rSet);
 			});
 		}
-		   public List<Ideas> getAllIdeas() {
+		   public List<Ideas> getAllIdeas(long themeid) {
 
-				return jdbcTemplate.execute("select * from Ideas", (PreparedStatementCallback<List<Ideas>>) ps -> {
+				return jdbcTemplate.execute("select idea_id from Ideas where theme_id = ?", (PreparedStatementCallback<List<Ideas>>) ps -> {
+					ps.setLong( 1,themeid);
 					ResultSet resultSet=ps.executeQuery();
+				
+					
 
-					Map<String, Integer> resultMap = new LinkedHashMap<>();
+					
 
 					return utils.buildList(resultSet);
 				});

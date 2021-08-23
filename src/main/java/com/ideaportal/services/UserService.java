@@ -161,18 +161,29 @@ public class UserService {
 			}
 			return responseMessage;
 		}
-		public ResponseMessage<List<Ideas>> getAllIdeas() {
+		public ResponseMessage<List<Ideas>> getIdeasBythemeid(long themeID) 
+		{
+			ResponseMessage<List<Ideas>> responseMessage=new ResponseMessage<>();
 
-	    	List<Ideas> listOfIdeas = userDAO.getAllIdeas();
+			List<Ideas> list=userDAO.getAllIdeas(themeID);
 
-	    	ResponseMessage<List<Ideas>> responseMessage = new ResponseMessage<>();
-	    	responseMessage.setResult(listOfIdeas);
-	    	responseMessage.setStatus(HttpStatus.OK.value());
-			responseMessage.setStatusText("list of ideas");
-	    	responseMessage.setTotalElements(listOfIdeas.size());
-
-	    	return responseMessage;
+			if(list.isEmpty())
+			{
+				
+				responseMessage.setResult(null);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("no idea submitted");
+			}
+			else
+			{
+				responseMessage.setResult(list);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("List all ideas");
+				responseMessage.setTotalElements(list.size());
+			}
+			return responseMessage;
 		}
+		
 	
 	
 
