@@ -1,8 +1,5 @@
 package com.ideaportal.controller;
 
-
-
-
 import java.util.List;
 
 
@@ -20,8 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ideaportal.dao.DaoUtils;
 import com.ideaportal.dao.UserDAO;
+import com.ideaportal.dto.CommentsDTO;
 import com.ideaportal.dto.UserDTO;
 import com.ideaportal.exception.UserAuthException;
+import com.ideaportal.exception.UserNotFoundException;
+import com.ideaportal.models.Comments;
 import com.ideaportal.models.Ideas;
 import com.ideaportal.models.Login;
 import com.ideaportal.models.ResponseMessage;
@@ -81,11 +81,6 @@ public class UserController {
 	  @GetMapping(value = "/themes/{themeID}/ideas/")
 	    public ResponseEntity<ResponseMessage<List<Ideas>>> getIdeasByTheme(@PathVariable("themeID") long themeID) 
 	    {
-	        
-
-	       
-
-	        
 
 	        ResponseMessage<List<Ideas>> responseMessage = userService.getIdeasBythemeid(themeID);
 
@@ -126,6 +121,26 @@ public class UserController {
         }
 
         return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
+    }
+    
+    //Function to support that user can comment an idea
+    @PostMapping(value="/user/idea/comment")
+    public ResponseEntity<ResponseMessage<Comments>> commentAnIdea(@RequestBody CommentsDTO commentsDTO) throws
+            Exception
+    {
+        Comments comment = modelMapper.map(commentsDTO, Comments.class);
+    	User user=utils.findByUserId(comment.getUser().getUserId());
+    	Ideas idea=utils.isIdeaIDValid(comment.getIdea().getIdeaId());
+    	if(user==null) {
+            throw new UserNotFoundException("User Not Found, Please try again!");
+        }
+    	if(idea==null) {
+            throw new Exception("Invalid Idea Id");
+        }
+        ResponseMessage<Comments> responseMessage = userService.commentAnIdeaResponseMessage(comment);
+
+    	return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
+    	
     }
 
 }

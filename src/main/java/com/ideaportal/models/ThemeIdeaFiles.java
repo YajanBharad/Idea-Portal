@@ -92,7 +92,7 @@ public class ThemeIdeaFiles {
 	public void setFileType(String fileType) {
 		this.fileType = fileType;
 	}
-	@JsonBackReference
+	@JsonBackReference("theme")
 	public  Themes getThemeId() {
 		return this.theme;
 	}
@@ -100,7 +100,7 @@ public class ThemeIdeaFiles {
 	public void setThemeId(Themes themeId) {
 		this.theme = themeId;
 	}
-	@JsonBackReference
+	@JsonBackReference("idea")
 	public Ideas getIdeaId() {
 		return this.idea;
 	}

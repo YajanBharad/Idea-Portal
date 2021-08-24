@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.stereotype.Repository;
 
+import com.ideaportal.models.Comments;
 import com.ideaportal.models.Ideas;
 import com.ideaportal.models.Themes;
 import com.ideaportal.models.ThemesCategory;
@@ -115,5 +116,30 @@ public class DaoUtils {
 			list.add(optional.orElse(null));
 		}
 		return list;
+	}
+    public Ideas isIdeaIDValid(long ideaID)
+    {
+    	Ideas idea;
+    	try
+    	{
+    		idea=ideasRepository.findById(ideaID).orElse(null);
+    	}catch (NoSuchElementException e) {return null;}
+    	return idea;
+    	
+    }
+    public Comments buildCommentsObject(Comments comment) 
+	{
+		Optional<User> optionalUser=userRepo.findById(comment.getUser().getUserId());
+		
+		User user= optionalUser.orElse(null);
+	
+		Optional<Ideas> optionalIdeas=ideasRepository.findById(comment.getIdea().getIdeaId());
+		
+		Ideas idea= optionalIdeas.orElse(null);
+		comment.setUser(user);
+		comment.setIdea(idea);
+	
+		return comment;
+		
 	}
 }
