@@ -119,5 +119,16 @@ public class UserDAO {
 				commrepo.save(comment);
 				return comment;
 			}
+		   
+		   public List<Comments> getCommentsList(long ideaID)
+			{
+				return jdbcTemplate.execute("select comment_id from comments where idea_id=?", (PreparedStatementCallback<List<Comments>>) ps -> {
+					ps.setLong(1, ideaID);
+
+					ResultSet resultSet=ps.executeQuery();
+
+					return utils.buildGetCommentsList(resultSet);
+				});
+			}
 
 }

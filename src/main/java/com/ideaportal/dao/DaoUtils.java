@@ -22,6 +22,7 @@ import com.ideaportal.repo.IdeasRepository;
 import com.ideaportal.repo.ThemesCategoryRepository;
 import com.ideaportal.repo.ThemesRepository;
 import com.ideaportal.repo.UserRepository;
+import com.ideaportal.repo.commentsRepository;
 
 @Repository
 public class DaoUtils {
@@ -36,6 +37,9 @@ public class DaoUtils {
 	
 	@Autowired
 	JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	commentsRepository commRepo;
 	
 	@Autowired
 	IdeasRepository ideasRepository;
@@ -140,6 +144,19 @@ public class DaoUtils {
 		comment.setIdea(idea);
 	
 		return comment;
+		
+	}
+    
+    public List<Comments> buildGetCommentsList(ResultSet resultSet) throws SQLException 
+	{
+		List<Comments> list=new ArrayList<>();
+		
+		while(resultSet.next())
+		{
+			Optional<Comments> optional=commRepo.findById(resultSet.getLong(1));
+			list.add(optional.orElse(null));
+		}
+		return list;
 		
 	}
 }
