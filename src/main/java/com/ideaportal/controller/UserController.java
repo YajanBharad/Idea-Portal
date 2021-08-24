@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,11 +19,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ideaportal.dao.DaoUtils;
 import com.ideaportal.dao.UserDAO;
 import com.ideaportal.dto.CommentsDTO;
+import com.ideaportal.dto.LikesDTO;
 import com.ideaportal.dto.UserDTO;
 import com.ideaportal.exception.UserAuthException;
 import com.ideaportal.exception.UserNotFoundException;
 import com.ideaportal.models.Comments;
 import com.ideaportal.models.Ideas;
+import com.ideaportal.models.Likes;
 import com.ideaportal.models.Login;
 import com.ideaportal.models.ResponseMessage;
 import com.ideaportal.models.Themes;
@@ -122,6 +125,35 @@ public class UserController {
 
         return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
     }
+    @PutMapping(value="/user/idea/like")
+    public ResponseEntity<ResponseMessage<Likes>> likeAnIdea(@RequestBody LikesDTO likesDTO)throws Exception {
+            
+
+        Likes likes= modelMapper.map(likesDTO, Likes.class);
+    	String res=utils.isIdeaLiked(likes);
+    	
+    	Ideas idea=utils.isIdeaIDValid(likes.getIdea().getIdeaId());
+    	
+    	User user=utils.findByUserId(likes.getUser().getUserId());
+      	if(user==null) {
+            throw new UserNotFoundException("User Not Found, Please try again!");
+        }
+    	if(idea==null) {
+            throw new Exception("Invalid Idea Id");
+    	}
+    	
+    	
+    	
+    	
+
+       
+
+        ResponseMessage<Likes> responseMessage = userService.likeAnIdeaResponseMessage(likes);
+
+      
+
+    	return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
+    }
     
     //Function to support that user can comment an idea
     @PostMapping(value="/user/idea/comment")
@@ -157,5 +189,23 @@ public class UserController {
 
     	return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
     }
+    @GetMapping(value = "idea/{ideaID}/likes")
+    public ResponseEntity<ResponseMessage<List<User>>> getLikesForIdea(@PathVariable ("ideaID") long ideaID) throws Exception
+    {
+        
+    	Ideas idea=utils.isIdeaIDValid(ideaID);
+    	if(idea==null) {
+    	    
+            throw new Exception("IDEA_NOT_FOUND");
+        }
+        
+
+        ResponseMessage<List<User>> responseMessage = userService.getLikesForIdeaResponseMessage(ideaID);
+
+       
+
+    	return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
+    }
+    
 
 }

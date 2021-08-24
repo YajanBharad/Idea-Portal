@@ -21,6 +21,7 @@ import com.ideaportal.exception.InvalidRoleException;
 import com.ideaportal.exception.UserAuthException;
 import com.ideaportal.models.Comments;
 import com.ideaportal.models.Ideas;
+import com.ideaportal.models.Likes;
 import com.ideaportal.models.Login;
 import com.ideaportal.models.ResponseMessage;
 import com.ideaportal.models.Themes;
@@ -221,6 +222,56 @@ public class UserService {
 				responseMessage.setResult(list);
 				responseMessage.setStatus(HttpStatus.OK.value());
 				responseMessage.setStatusText("List of all Comments");
+				responseMessage.setTotalElements(size);
+
+			}
+			return responseMessage;
+
+		}
+		public ResponseMessage<Likes> likeAnIdeaResponseMessage(Likes likes) throws Exception
+		{
+			Likes like =userDAO.saveLikes(likes);
+			
+			ResponseMessage<Likes> responseMessage=new ResponseMessage<>();
+			
+			if(like==null) {
+				
+				throw new Exception("idea was not liked");
+			}
+			else
+			{
+				responseMessage.setResult(like);
+				responseMessage.setStatus(HttpStatus.CREATED.value());
+			
+				if(!(like.getLikeValue()))
+					responseMessage.setStatusText("dislike idea success");
+				else
+					responseMessage.setStatusText("like idea success");
+				responseMessage.setTotalElements(1);
+			}
+			
+			return responseMessage;
+		}
+		public ResponseMessage<List<User>> getLikesForIdeaResponseMessage(long ideaID) 
+		{
+			List<User> list=userDAO.getLikesForIdeaList(ideaID);
+			
+			ResponseMessage<List<User>> responseMessage=new ResponseMessage<>();
+			
+			int size=list.size();
+			
+			if(size==0)
+			{
+				
+				responseMessage.setResult(null);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("NO LIKES");
+			}
+			else
+			{
+				responseMessage.setResult(list);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("LIKES_LIST");
 				responseMessage.setTotalElements(size);
 
 			}

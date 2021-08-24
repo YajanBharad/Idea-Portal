@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import com.ideaportal.models.Comments;
 import com.ideaportal.models.Ideas;
+import com.ideaportal.models.Likes;
 import com.ideaportal.models.Themes;
 import com.ideaportal.models.ThemesCategory;
 import com.ideaportal.models.User;
@@ -159,4 +160,82 @@ public class DaoUtils {
 		return list;
 		
 	}
+	public String isIdeaLiked(Likes likes) 
+	{
+		final Boolean  likeValue=likes.getLikeValue();
+		
+		return jdbcTemplate.execute("select like_value from Likes where  user_id=? and  idea_id=?", (PreparedStatementCallback<String>) ps -> {
+			ps.setLong(1, likes.getUser().getUserId());
+			ps.setLong(2, likes.getIdea().getIdeaId());
+
+			ResultSet resultSet=ps.executeQuery();
+
+			if(resultSet.next())
+			{
+				int userLikeValue=0;
+
+				if(likeValue)
+					userLikeValue=1;
+
+				long dbLikeValue=resultSet.getLong(1);
+
+				if(dbLikeValue==userLikeValue && userLikeValue==1)
+					return "idea liked";
+				if(dbLikeValue==userLikeValue && userLikeValue==0)
+					return "idea disliked";
+			}
+			return null;
+		});
+	}
+	 public long findLikeID(long ideaID, long userID)
+	    {
+	    	long result;
+	    	
+	    	result=jdbcTemplate.execute("select like_id from Likes where idea_id=? and user_id=?", (PreparedStatementCallback<Long>) ps -> {
+				ps.setLong(1, ideaID);
+				ps.setLong(2, userID);
+
+				ResultSet resultSet=ps.executeQuery();
+
+				if(resultSet.next())
+				{
+					return resultSet.getLong(1);
+				}
+				else {
+					return 0L;
+				}
+
+			});
+	    	
+	    	if(result>0)
+	    		return result;
+	    	else
+	    		return 0L;
+	    }
+	 public Likes buildLikesObject(Likes likes) 
+		{
+			Optional<User> optionalUser=userRepo.findById(likes.getUser().getUserId());
+			
+			User user= optionalUser.orElse(null);
+		
+			Optional<Ideas> optionalIdeas=ideasRepository.findById(likes.getIdea().getIdeaId());
+			
+			Ideas idea= optionalIdeas.orElse(null);
+			
+			likes.setUser(user);
+			likes.setIdea(idea);
+			
+			return likes;
+		}
+	 public List<User> buildUserList(ResultSet resultSet) throws SQLException 
+		{
+			List<User> list=new ArrayList<>();
+			
+			while(resultSet.next())
+			{
+				Optional<User> optional=userRepo.findById(resultSet.getLong(1));
+				list.add(optional.orElse(null));
+			}
+			return list;
+		}
 }
