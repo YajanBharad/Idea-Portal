@@ -95,7 +95,7 @@ public class Themes {
 	public void setThemeDescription(String themeDescription) {
 		this.themeDescription = themeDescription;
 	}
-	@JsonManagedReference
+	@JsonManagedReference("theme")
 	public List<ThemeIdeaFiles> getThemeFiles() {
 		return themeFiles;
 	}

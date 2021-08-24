@@ -19,6 +19,7 @@ import com.ideaportal.dao.DaoUtils;
 import com.ideaportal.dao.UserDAO;
 import com.ideaportal.exception.InvalidRoleException;
 import com.ideaportal.exception.UserAuthException;
+import com.ideaportal.models.Comments;
 import com.ideaportal.models.Ideas;
 import com.ideaportal.models.Login;
 import com.ideaportal.models.ResponseMessage;
@@ -184,7 +185,21 @@ public class UserService {
 			return responseMessage;
 		}
 		
-	
+//		Service to comment on an idea
+		public ResponseMessage<Comments> commentAnIdeaResponseMessage(Comments comment) throws Exception
+		{
+			Comments dbComment=userDAO.saveComment(comment);
+			
+			if(dbComment==null) {
+				throw new Exception("Some error occurred, Please try again");
+			}
+			ResponseMessage<Comments> responseMessage=new ResponseMessage<>();
+			responseMessage.setResult(dbComment);
+			responseMessage.setStatus(HttpStatus.CREATED.value());
+			responseMessage.setStatusText("Your comment was added");
+			responseMessage.setTotalElements(1);
+			return responseMessage;
+		}
 	
 
 }

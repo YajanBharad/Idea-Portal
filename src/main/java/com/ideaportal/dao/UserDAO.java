@@ -3,10 +3,10 @@ package com.ideaportal.dao;
 
 
 import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Repository;
 
 import com.ideaportal.exception.InvalidRoleException;
+import com.ideaportal.models.Comments;
 import com.ideaportal.models.Ideas;
 import com.ideaportal.models.Login;
 import com.ideaportal.models.Roles;
@@ -22,9 +23,12 @@ import com.ideaportal.models.Themes;
 import com.ideaportal.models.User;
 import com.ideaportal.repo.IdeasRepository;
 import com.ideaportal.repo.UserRepository;
+import com.ideaportal.repo.commentsRepository;
 @Repository
 public class UserDAO {
 	
+	@Autowired
+	commentsRepository commrepo;
 	
 	@Autowired
 	UserRepository userRepository;
@@ -103,12 +107,17 @@ public class UserDAO {
 				return jdbcTemplate.execute("select idea_id from Ideas where theme_id = ?", (PreparedStatementCallback<List<Ideas>>) ps -> {
 					ps.setLong( 1,themeid);
 					ResultSet resultSet=ps.executeQuery();
-				
 					
-
-					
-
 					return utils.buildList(resultSet);
 				});
 		   }
+		   
+		   public Comments saveComment(Comments comment) 
+			{
+				comment.setCommentDate(Timestamp.valueOf(LocalDateTime.now()));
+				comment=utils.buildCommentsObject(comment);
+				commrepo.save(comment);
+				return comment;
+			}
+
 }

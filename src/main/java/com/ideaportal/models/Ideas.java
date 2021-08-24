@@ -34,11 +34,11 @@ public class Ideas {
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "theme")
 	private List<ThemeIdeaFiles> ideaFiles;
 	
-	@ManyToOne(cascade = {CascadeType.ALL})
+	@ManyToOne
 	@JoinColumn(name="theme_id")
 	private Themes theme;
 	
-	@ManyToOne(cascade = {CascadeType.ALL})
+	@ManyToOne
 	@JoinColumn(name="user_id")
 	private User user;
 	
@@ -75,7 +75,7 @@ public class Ideas {
 	public void setIdeaDescription(String ideaDescription) {
 		this.ideaDescription = ideaDescription;
 	}
-	@JsonManagedReference
+	@JsonManagedReference("idea")
 	public List<ThemeIdeaFiles> getIdeaFiles() {
 		return ideaFiles;
 	}
