@@ -142,5 +142,20 @@ public class UserController {
     	return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
     	
     }
+    //Function to get a  list of comments for an idea
+    @GetMapping(value="idea/{ideaID}/comments")
+    public ResponseEntity<ResponseMessage<List<Comments>>> getCommentsForIdea(@PathVariable ("ideaID") long ideaID) throws Exception
+    {
+        
+    	Ideas idea=utils.isIdeaIDValid(ideaID);
+    	if(idea==null) {
+            throw new Exception("Invalid Idea ID");
+        }
+
+        ResponseMessage<List<Comments>> responseMessage = userService.getCommentForIdeaResponseMessage(ideaID);
+
+
+    	return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
+    }
 
 }

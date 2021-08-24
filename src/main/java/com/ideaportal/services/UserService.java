@@ -201,5 +201,31 @@ public class UserService {
 			return responseMessage;
 		}
 	
+		public ResponseMessage<List<Comments>> getCommentForIdeaResponseMessage(long ideaID) 
+		{
+			List<Comments> list=userDAO.getCommentsList(ideaID);
+			
+			ResponseMessage<List<Comments>> responseMessage=new ResponseMessage<>();
+			
+			int size=list.size();
+			if(size==0)
+			{
+				responseMessage.setResult(null);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("No Comments to the idea yet");
+
+			}
+			
+			else
+			{
+				responseMessage.setResult(list);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("List of all Comments");
+				responseMessage.setTotalElements(size);
+
+			}
+			return responseMessage;
+
+		}
 
 }
