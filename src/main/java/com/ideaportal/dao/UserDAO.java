@@ -17,11 +17,13 @@ import org.springframework.stereotype.Repository;
 import com.ideaportal.exception.InvalidRoleException;
 import com.ideaportal.models.Comments;
 import com.ideaportal.models.Ideas;
+import com.ideaportal.models.Likes;
 import com.ideaportal.models.Login;
 import com.ideaportal.models.Roles;
 import com.ideaportal.models.Themes;
 import com.ideaportal.models.User;
 import com.ideaportal.repo.IdeasRepository;
+import com.ideaportal.repo.LikeRepository;
 import com.ideaportal.repo.UserRepository;
 import com.ideaportal.repo.commentsRepository;
 @Repository
@@ -36,6 +38,9 @@ public class UserDAO {
 	@Autowired
 
 	IdeasRepository ideasRepository;
+	
+	@Autowired
+	LikeRepository likeRepository;
 
 	@Autowired
 	DaoUtils utils;
@@ -128,6 +133,34 @@ public class UserDAO {
 					ResultSet resultSet=ps.executeQuery();
 
 					return utils.buildGetCommentsList(resultSet);
+				});
+			}
+		   
+		   public Likes saveLikes(Likes likes)
+			{
+				long likeID=utils.findLikeID(likes.getIdea().getIdeaId(), likes.getUser().getUserId());
+				
+				likes.setLikedDate(Timestamp.valueOf(LocalDateTime.now()));
+
+				if (likeID != 0) {
+					likes.setLikeId(likeID);
+				}
+				
+				likes=utils.buildLikesObject(likes);
+				likes=likeRepository.save(likes);
+				
+				return likes;
+			}
+		   public List<User> getLikesForIdeaList(long ideaID)
+			{
+				return jdbcTemplate.execute("select user_id from Likes where idea_id=? and like_value=?", (PreparedStatementCallback<List<User>>) ps -> {
+					ps.setLong(1, ideaID);
+					ps.setLong(2, 1);
+
+					ResultSet resultSet=ps.executeQuery();
+
+					return utils.buildUserList(resultSet);
+
 				});
 			}
 

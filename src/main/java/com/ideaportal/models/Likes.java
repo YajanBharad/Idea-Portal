@@ -23,7 +23,6 @@ public class Likes {
 	
 	@Column(name="like_value",nullable = false, columnDefinition = "TINYINT(1)")
 	private boolean likeValue;
-	
 	@OneToOne
 	@JoinColumn(name="idea_id")
 	private Ideas idea;
@@ -37,12 +36,17 @@ public class Likes {
 	private Date likedDate;
 	
 	
+	public boolean getLikeValue() {
+		return likeValue;
+	}
+
+
 	public Likes() {
 
 	}
 
 
-	public Likes(long likeId, boolean likeValue, Ideas idea, User user, Date likedDate) {
+	public Likes(long likeId, Boolean likeValue, Ideas idea, User user, Date likedDate) {
 		this.likeId = likeId;
 		this.likeValue = likeValue;
 		this.idea = idea;
@@ -61,13 +65,16 @@ public class Likes {
 	}
 
 
-	public boolean isLikeValue() {
+	public Boolean   isLikeValue() {
 		return likeValue;
 	}
 
 
-	public void setLikeValue(boolean likeValue) {
+	public void setLikeValue(Boolean likeValue) {
 		this.likeValue = likeValue;
+	}
+	public Boolean getLikeValue(Boolean likeValue) {
+		return likeValue;
 	}
 
 
