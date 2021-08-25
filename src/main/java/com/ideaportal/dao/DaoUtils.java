@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import com.ideaportal.models.Comments;
 import com.ideaportal.models.Ideas;
 import com.ideaportal.models.Likes;
+import com.ideaportal.models.ParticipationResponse;
 import com.ideaportal.models.Themes;
 import com.ideaportal.models.ThemesCategory;
 import com.ideaportal.models.User;
@@ -237,5 +238,18 @@ public class DaoUtils {
 				list.add(optional.orElse(null));
 			}
 			return list;
+		}
+	 public ParticipationResponse buildParticipantObject(ParticipationResponse participant) 
+		{
+			Optional<User> optionalUser=userRepo.findById(participant.getUser().getUserId());
+			
+			User user= optionalUser.orElse(null);
+		
+			Optional<Ideas> optionalIdeas=ideasRepository.findById(participant.getIdea().getIdeaId());
+			Ideas idea= optionalIdeas.orElse(null);
+			participant.setUser(user);
+			participant.setIdea(idea);
+			return participant;
+			
 		}
 }

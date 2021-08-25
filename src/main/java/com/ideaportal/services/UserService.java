@@ -23,6 +23,7 @@ import com.ideaportal.models.Comments;
 import com.ideaportal.models.Ideas;
 import com.ideaportal.models.Likes;
 import com.ideaportal.models.Login;
+import com.ideaportal.models.ParticipationResponse;
 import com.ideaportal.models.ResponseMessage;
 import com.ideaportal.models.Themes;
 import com.ideaportal.models.User;
@@ -277,6 +278,20 @@ public class UserService {
 			}
 			return responseMessage;
 
+		}
+		public ResponseMessage<ParticipationResponse> enrollParticipant(ParticipationResponse participant) throws Exception
+		{
+			ParticipationResponse partresponse=userDAO.enrollResponse(participant);
+			
+			if(partresponse==null) {
+				throw new Exception("Some error occurred, Please try again");
+			}
+			ResponseMessage<ParticipationResponse> responseMessage=new ResponseMessage<>();
+			responseMessage.setResult(partresponse);
+			responseMessage.setStatus(HttpStatus.CREATED.value());
+			responseMessage.setStatusText("Your participation is considered");
+			responseMessage.setTotalElements(1);
+			return responseMessage;
 		}
 
 }
