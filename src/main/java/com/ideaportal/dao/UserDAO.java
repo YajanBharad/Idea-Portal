@@ -21,11 +21,13 @@ import com.ideaportal.models.Comments;
 import com.ideaportal.models.Ideas;
 import com.ideaportal.models.Likes;
 import com.ideaportal.models.Login;
+import com.ideaportal.models.ParticipationResponse;
 import com.ideaportal.models.Roles;
 import com.ideaportal.models.Themes;
 import com.ideaportal.models.User;
 import com.ideaportal.repo.IdeasRepository;
 import com.ideaportal.repo.LikeRepository;
+import com.ideaportal.repo.ParticipationRepository;
 import com.ideaportal.repo.UserRepository;
 import com.ideaportal.repo.commentsRepository;
 @Repository
@@ -47,6 +49,8 @@ public class UserDAO {
 	@Autowired
 	DaoUtils utils;
 
+	@Autowired
+	ParticipationRepository partRepo;
 	
 	@Autowired
 	
@@ -165,18 +169,50 @@ public class UserDAO {
 
 				});
 			}
+
 		   public List<User> getDislikesForIdeaList(long ideaID)
 			{
 				return jdbcTemplate.execute("select user_id from Likes where idea_id=? and like_value=?", (PreparedStatementCallback<List<User>>) ps -> {
 					ps.setLong(1, ideaID);
-					ps.setLong(2, 0);		//Dislike Value
-
+					ps.setLong(2, 0);
 					ResultSet resultSet=ps.executeQuery();
 
 					return utils.buildUserList(resultSet);
 
 				});
+					
+			}//Dislike Value
+
+		   public ParticipationResponse enrollResponse(ParticipationResponse participant)
+			{
+			    long uId=utils.findIfParticipated(participant.getUser().getUserId(),participant.getIdea().getIdeaId());
+			    if(uId==0L)
+			    {	
+				participant.setParticipationDate(Timestamp.valueOf(LocalDateTime.now()));
+				participant=utils.buildParticipantObject(participant);
+				partRepo.save(participant);
+				return participant;
+			    }
+			    else
+			    {
+			    	return null;
+			    }
+			}
+		   public List<User> getParticipantList(long ideaId)
+			{
+				return jdbcTemplate.execute("select user_id from participationresponse where idea_id=?", (PreparedStatementCallback<List<User>>) ps -> {
+					ps.setLong(1, ideaId);
+
+
+					ResultSet resultSet=ps.executeQuery();
+
+					return utils.buildUserList(resultSet);
+
+
+				});
 			}
 
 
+				
+			
 }

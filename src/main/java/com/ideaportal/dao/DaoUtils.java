@@ -17,6 +17,7 @@ import com.ideaportal.models.Comments;
 import com.ideaportal.models.Ideas;
 
 import com.ideaportal.models.Likes;
+import com.ideaportal.models.ParticipationResponse;
 import com.ideaportal.models.Themes;
 import com.ideaportal.models.ThemesCategory;
 import com.ideaportal.models.User;
@@ -239,4 +240,42 @@ public class DaoUtils {
 			}
 			return list;
 		}
+	 public ParticipationResponse buildParticipantObject(ParticipationResponse participant) 
+		{
+			Optional<User> optionalUser=userRepo.findById(participant.getUser().getUserId());
+			
+			User user= optionalUser.orElse(null);
+		
+			Optional<Ideas> optionalIdeas=ideasRepository.findById(participant.getIdea().getIdeaId());
+			Ideas idea= optionalIdeas.orElse(null);
+			participant.setUser(user);
+			participant.setIdea(idea);
+			return participant;
+			
+		}
+	 public long findIfParticipated(long userId,long ideaId)
+	 {
+		 long result;
+	    	
+	    	result=jdbcTemplate.execute("select user_id from participationresponse where user_id=? and idea_id=?", (PreparedStatementCallback<Long>) ps -> {
+				ps.setLong(1, userId);
+				ps.setLong(2,ideaId);
+
+				ResultSet resultSet=ps.executeQuery();
+
+				if(resultSet.next())
+				{
+					return resultSet.getLong(1);
+				}
+				else {
+					return 0L;
+				}
+
+			});
+	    	
+	    	if(result>0)
+	    		return result;
+	    	else
+	    		return 0L;
+	 }
 }

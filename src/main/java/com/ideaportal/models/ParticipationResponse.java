@@ -21,9 +21,6 @@ public class ParticipationResponse {
 		@Column(name="response_id",nullable=false)
 		private long responseId;
 		
-		@ManyToOne
-		@JoinColumn(name="theme_id")
-		private Themes theme;
 		
 		@ManyToOne
 		@JoinColumn(name="user_id")
@@ -43,9 +40,8 @@ public class ParticipationResponse {
 		public ParticipationResponse() {
 		}
 
-		public ParticipationResponse(long responseId, Themes theme, User user, Ideas idea, Date participationDate) {
+		public ParticipationResponse(long responseId, User user, Ideas idea, Date participationDate) {
 			this.responseId = responseId;
-			this.theme = theme;
 			this.user = user;
 			this.idea = idea;
 			this.participationDate = participationDate;
@@ -59,13 +55,6 @@ public class ParticipationResponse {
 			this.responseId = responseId;
 		}
 
-		public Themes getTheme() {
-			return theme;
-		}
-
-		public void setTheme(Themes theme) {
-			this.theme = theme;
-		}
 
 		public User getUser() {
 			return user;
@@ -93,7 +82,7 @@ public class ParticipationResponse {
 
 		@Override
 		public String toString() {
-			return "ParticipationResponse [responseId=" + responseId + ", theme=" + theme + ", user=" + user + ", idea="
+			return "ParticipationResponse [responseId=" + responseId + ", user=" + user + ", idea="
 					+ idea + ", participationDate=" + participationDate + "]";
 		}
 		

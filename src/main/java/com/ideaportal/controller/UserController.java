@@ -20,6 +20,7 @@ import com.ideaportal.dao.DaoUtils;
 import com.ideaportal.dao.UserDAO;
 import com.ideaportal.dto.CommentsDTO;
 import com.ideaportal.dto.LikesDTO;
+import com.ideaportal.dto.ParticipantDTO;
 import com.ideaportal.dto.UserDTO;
 import com.ideaportal.exception.UserAuthException;
 import com.ideaportal.exception.UserNotFoundException;
@@ -27,9 +28,11 @@ import com.ideaportal.models.Comments;
 import com.ideaportal.models.Ideas;
 import com.ideaportal.models.Likes;
 import com.ideaportal.models.Login;
+import com.ideaportal.models.ParticipationResponse;
 import com.ideaportal.models.ResponseMessage;
 import com.ideaportal.models.Themes;
 import com.ideaportal.models.User;
+import com.ideaportal.repo.ParticipationRepository;
 import com.ideaportal.services.UserService;
 
 @RestController
@@ -46,6 +49,8 @@ public class UserController {
 	  UserService userService;
 	    @Autowired
 	    DaoUtils utils;
+	 @Autowired   
+	 ParticipationRepository partRepo;
 	
 	@PostMapping(value = "/signup")
 	public ResponseEntity<ResponseMessage<User>> createNewUser(@RequestBody UserDTO userDTO)
@@ -141,16 +146,8 @@ public class UserController {
     	if(idea==null) {
             throw new Exception("Invalid Idea Id");
     	}
-    	
-    	
-    	
-    	
 
-       
-
-        ResponseMessage<Likes> responseMessage = userService.likeAnIdeaResponseMessage(likes);
-
-      
+        ResponseMessage<Likes> responseMessage = userService.likeAnIdeaResponseMessage(likes);      
 
     	return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
     }
@@ -224,5 +221,38 @@ public class UserController {
     	return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
     }
     
+  //interest in idea
+  	@PostMapping(path="/idea/interested")
+  	public ResponseEntity<ResponseMessage<ParticipationResponse>> interestedParticipants(@RequestBody ParticipantDTO participantDTO) throws Exception
+  	{
+  		 ParticipationResponse participant = modelMapper.map(participantDTO, ParticipationResponse.class);
+     	User user=utils.findByUserId(participant.getUser().getUserId());
+     	Ideas idea=utils.isIdeaIDValid(participant.getIdea().getIdeaId());
+     	if(user==null) {
+             throw new UserNotFoundException("User Not Found, Please try again!");
+         }
+     	if(idea==null) {
+             throw new Exception("Invalid Idea Id");
+         }
+     	ResponseMessage<ParticipationResponse> responseMessage = userService.enrollParticipant(participant);
+     	
+     	return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
+  	}
+  	
+  	@GetMapping(path="/idea/{ideaId}/interested")
+  	public ResponseEntity<ResponseMessage<List<User>>> listOfInterestedParticipants(@PathVariable ("ideaId") long ideaId) throws Exception
+  	{
+  		Ideas idea=utils.isIdeaIDValid(ideaId);
+    	if(idea==null) {
+    	    
+            throw new Exception("IDEA_NOT_FOUND");
+        }
+        
 
+        ResponseMessage<List<User>> responseMessage = userService.getParticipantsForIdea(ideaId);
+
+       
+
+    	return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
+  	}
 }

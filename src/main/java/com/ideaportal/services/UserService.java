@@ -23,6 +23,7 @@ import com.ideaportal.models.Comments;
 import com.ideaportal.models.Ideas;
 import com.ideaportal.models.Likes;
 import com.ideaportal.models.Login;
+import com.ideaportal.models.ParticipationResponse;
 import com.ideaportal.models.ResponseMessage;
 import com.ideaportal.models.Themes;
 import com.ideaportal.models.User;
@@ -278,9 +279,58 @@ public class UserService {
 			return responseMessage;
 
 		}
+
 		public ResponseMessage<List<User>> getDislikesForIdeaResponseMessage(long ideaID) 
 		{
 			List<User> list=userDAO.getDislikesForIdeaList(ideaID);
+			ResponseMessage<List<User>> responseMessage=new ResponseMessage<>();
+			
+			int size=list.size();
+			
+			if(size==0)
+			{
+				
+				responseMessage.setResult(null);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("NO Dislikes");
+			}
+			else
+			{
+				responseMessage.setResult(list);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("Dislike list");
+				responseMessage.setTotalElements(size);
+
+			}
+			return responseMessage;
+
+		}
+			
+			
+		public ResponseMessage<ParticipationResponse> enrollParticipant(ParticipationResponse participant) throws Exception
+		{
+			ParticipationResponse partresponse=userDAO.enrollResponse(participant);
+			
+			if(partresponse==null) {
+				ResponseMessage<ParticipationResponse> responseMessage=new ResponseMessage<>();
+				responseMessage.setResult(partresponse);
+				responseMessage.setStatus(HttpStatus.CREATED.value());
+				responseMessage.setStatusText("You have already Participated for this Idea");
+				responseMessage.setTotalElements(1);
+				return responseMessage;
+			}
+			ResponseMessage<ParticipationResponse> responseMessage=new ResponseMessage<>();
+			responseMessage.setResult(partresponse);
+			responseMessage.setStatus(HttpStatus.CREATED.value());
+			responseMessage.setStatusText("Your participation is considered");
+			responseMessage.setTotalElements(1);
+			return responseMessage;
+		}
+		
+		public ResponseMessage<List<User>> getParticipantsForIdea(long ideaId) 
+		{
+			List<User> list=userDAO.getParticipantList(ideaId);
+
 			
 			ResponseMessage<List<User>> responseMessage=new ResponseMessage<>();
 			
@@ -291,13 +341,16 @@ public class UserService {
 				
 				responseMessage.setResult(null);
 				responseMessage.setStatus(HttpStatus.OK.value());
-				responseMessage.setStatusText("NO dislikes");
+				responseMessage.setStatusText("NO Participants");
+
 			}
 			else
 			{
 				responseMessage.setResult(list);
 				responseMessage.setStatus(HttpStatus.OK.value());
-				responseMessage.setStatusText("Dislikelikes");
+
+				responseMessage.setStatusText("Participant's List");
+
 				responseMessage.setTotalElements(size);
 
 			}
