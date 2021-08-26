@@ -221,5 +221,21 @@ public class UserController {
      	
      	return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
   	}
+  	
+  	@GetMapping(path="/idea/{ideaId}/interested")
+  	public ResponseEntity<ResponseMessage<List<User>>> listOfInterestedParticipants(@PathVariable ("ideaId") long ideaId) throws Exception
+  	{
+  		Ideas idea=utils.isIdeaIDValid(ideaId);
+    	if(idea==null) {
+    	    
+            throw new Exception("IDEA_NOT_FOUND");
+        }
+        
 
+        ResponseMessage<List<User>> responseMessage = userService.getParticipantsForIdea(ideaId);
+
+       
+
+    	return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
+  	}
 }

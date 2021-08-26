@@ -252,4 +252,29 @@ public class DaoUtils {
 			return participant;
 			
 		}
+	 public long findIfParticipated(long userId,long ideaId)
+	 {
+		 long result;
+	    	
+	    	result=jdbcTemplate.execute("select user_id from participationresponse where user_id=? and idea_id=?", (PreparedStatementCallback<Long>) ps -> {
+				ps.setLong(1, userId);
+				ps.setLong(2,ideaId);
+
+				ResultSet resultSet=ps.executeQuery();
+
+				if(resultSet.next())
+				{
+					return resultSet.getLong(1);
+				}
+				else {
+					return 0L;
+				}
+
+			});
+	    	
+	    	if(result>0)
+	    		return result;
+	    	else
+	    		return 0L;
+	 }
 }

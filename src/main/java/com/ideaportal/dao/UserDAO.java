@@ -167,11 +167,30 @@ public class UserDAO {
 
 				});
 			}
-		   public ParticipationResponse enrollResponse(ParticipationResponse participant) 
+		   public ParticipationResponse enrollResponse(ParticipationResponse participant)
 			{
+			    long uId=utils.findIfParticipated(participant.getUser().getUserId(),participant.getIdea().getIdeaId());
+			    if(uId==0L)
+			    {	
 				participant.setParticipationDate(Timestamp.valueOf(LocalDateTime.now()));
 				participant=utils.buildParticipantObject(participant);
 				partRepo.save(participant);
 				return participant;
+			    }
+			    else
+			    {
+			    	return null;
+			    }
+			}
+		   public List<User> getParticipantList(long ideaId)
+			{
+				return jdbcTemplate.execute("select user_id from participationresponse where idea_id=?", (PreparedStatementCallback<List<User>>) ps -> {
+					ps.setLong(1, ideaId);
+
+					ResultSet resultSet=ps.executeQuery();
+
+					return utils.buildUserList(resultSet);
+
+				});
 			}
 }

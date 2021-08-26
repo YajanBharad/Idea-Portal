@@ -284,7 +284,12 @@ public class UserService {
 			ParticipationResponse partresponse=userDAO.enrollResponse(participant);
 			
 			if(partresponse==null) {
-				throw new Exception("Some error occurred, Please try again");
+				ResponseMessage<ParticipationResponse> responseMessage=new ResponseMessage<>();
+				responseMessage.setResult(partresponse);
+				responseMessage.setStatus(HttpStatus.CREATED.value());
+				responseMessage.setStatusText("You have already Participated for this Idea");
+				responseMessage.setTotalElements(1);
+				return responseMessage;
 			}
 			ResponseMessage<ParticipationResponse> responseMessage=new ResponseMessage<>();
 			responseMessage.setResult(partresponse);
@@ -292,6 +297,33 @@ public class UserService {
 			responseMessage.setStatusText("Your participation is considered");
 			responseMessage.setTotalElements(1);
 			return responseMessage;
+		}
+		
+		public ResponseMessage<List<User>> getParticipantsForIdea(long ideaId) 
+		{
+			List<User> list=userDAO.getParticipantList(ideaId);
+			
+			ResponseMessage<List<User>> responseMessage=new ResponseMessage<>();
+			
+			int size=list.size();
+			
+			if(size==0)
+			{
+				
+				responseMessage.setResult(null);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("NO Participants");
+			}
+			else
+			{
+				responseMessage.setResult(list);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("Participant's List");
+				responseMessage.setTotalElements(size);
+
+			}
+			return responseMessage;
+
 		}
 
 }
