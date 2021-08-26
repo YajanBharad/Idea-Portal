@@ -206,6 +206,23 @@ public class UserController {
 
     	return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
     }
+    @GetMapping(value = "idea/{ideaID}/dislikes")
+    public ResponseEntity<ResponseMessage<List<User>>> getDislikesForIdea(@PathVariable ("ideaID") long ideaID) throws Exception
+    {
+        
+    	Ideas idea=utils.isIdeaIDValid(ideaID);
+    	if(idea==null) {
+            
+            throw new Exception("Idea not found");
+        }
+       
+
+        ResponseMessage<List<User>> responseMessage = userService.getDislikesForIdeaResponseMessage(ideaID);
+
+        
+
+    	return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
+    }
     
 
 }

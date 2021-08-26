@@ -3,6 +3,7 @@ package com.ideaportal.dto;
 import java.sql.Date;
 
 import com.ideaportal.models.Ideas;
+
 import com.ideaportal.models.User;
 
 public class LikesDTO {
@@ -28,7 +29,7 @@ public class LikesDTO {
         return likeValue;
     }
 
-    public void setLikeValue(boolean  likeValue) {
+    public void setLikeValue(Boolean  likeValue) {
         this.likeValue = likeValue;
     }
 

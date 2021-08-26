@@ -278,5 +278,31 @@ public class UserService {
 			return responseMessage;
 
 		}
+		public ResponseMessage<List<User>> getDislikesForIdeaResponseMessage(long ideaID) 
+		{
+			List<User> list=userDAO.getDislikesForIdeaList(ideaID);
+			
+			ResponseMessage<List<User>> responseMessage=new ResponseMessage<>();
+			
+			int size=list.size();
+			
+			if(size==0)
+			{
+				
+				responseMessage.setResult(null);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("NO dislikes");
+			}
+			else
+			{
+				responseMessage.setResult(list);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("Dislikelikes");
+				responseMessage.setTotalElements(size);
+
+			}
+			return responseMessage;
+
+		}
 
 }

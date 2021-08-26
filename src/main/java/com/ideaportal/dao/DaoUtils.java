@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import com.ideaportal.models.Comments;
 import com.ideaportal.models.Ideas;
+
 import com.ideaportal.models.Likes;
 import com.ideaportal.models.Themes;
 import com.ideaportal.models.ThemesCategory;
@@ -162,7 +163,7 @@ public class DaoUtils {
 	}
 	public String isIdeaLiked(Likes likes) 
 	{
-		final Boolean  likeValue=likes.getLikeValue();
+		final boolean likeValue=likes.getLikeValue();
 		
 		return jdbcTemplate.execute("select like_value from Likes where  user_id=? and  idea_id=?", (PreparedStatementCallback<String>) ps -> {
 			ps.setLong(1, likes.getUser().getUserId());

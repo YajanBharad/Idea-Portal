@@ -6,7 +6,9 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -163,5 +165,18 @@ public class UserDAO {
 
 				});
 			}
+		   public List<User> getDislikesForIdeaList(long ideaID)
+			{
+				return jdbcTemplate.execute("select user_id from Likes where idea_id=? and like_value=?", (PreparedStatementCallback<List<User>>) ps -> {
+					ps.setLong(1, ideaID);
+					ps.setLong(2, 0);		//Dislike Value
+
+					ResultSet resultSet=ps.executeQuery();
+
+					return utils.buildUserList(resultSet);
+
+				});
+			}
+
 
 }
