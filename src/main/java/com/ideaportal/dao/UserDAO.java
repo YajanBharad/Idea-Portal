@@ -3,12 +3,14 @@ package com.ideaportal.dao;
 
 
 import java.sql.ResultSet;
+
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -20,12 +22,15 @@ import com.ideaportal.models.Ideas;
 import com.ideaportal.models.Likes;
 import com.ideaportal.models.Login;
 import com.ideaportal.models.ParticipationResponse;
+import com.ideaportal.models.ResponseMessage;
 import com.ideaportal.models.Roles;
 import com.ideaportal.models.Themes;
+import com.ideaportal.models.ThemesCategory;
 import com.ideaportal.models.User;
 import com.ideaportal.repo.IdeasRepository;
 import com.ideaportal.repo.LikeRepository;
 import com.ideaportal.repo.ParticipationRepository;
+import com.ideaportal.repo.ThemesCategoryRepository;
 import com.ideaportal.repo.UserRepository;
 import com.ideaportal.repo.commentsRepository;
 @Repository
@@ -51,8 +56,10 @@ public class UserDAO {
 	ParticipationRepository partRepo;
 	
 	@Autowired
-	
 	JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	ThemesCategoryRepository themeCatRepo;
 	
 	 public User saveUser(User userDetails) 
 	    {
@@ -190,6 +197,27 @@ public class UserDAO {
 					ResultSet resultSet=ps.executeQuery();
 
 					return utils.buildUserList(resultSet);
+
+				});
+			}
+		   public ResponseMessage<ThemesCategory> addCategory(ThemesCategory themeCategory)
+		    {
+			 	themeCategory=themeCatRepo.save(themeCategory);
+			 	ResponseMessage<ThemesCategory> responseMessage=new ResponseMessage<>();
+		        responseMessage.setResult(themeCategory);
+		        responseMessage.setStatus(HttpStatus.CREATED.value());
+		        responseMessage.setStatusText("Theme Category created Sucessfully");	
+		        responseMessage.setTotalElements(1);
+		        return responseMessage;
+		        		
+		    }
+		   public List<ThemesCategory> getThemeCategories()
+			{
+				return jdbcTemplate.execute("select * from themescategory", (PreparedStatementCallback<List<ThemesCategory>>) ps -> {
+					
+					ResultSet resultSet=ps.executeQuery();
+
+					return utils.buildCategoriesList(resultSet);
 
 				});
 			}

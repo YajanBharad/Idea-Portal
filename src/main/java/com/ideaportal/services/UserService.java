@@ -26,6 +26,7 @@ import com.ideaportal.models.Login;
 import com.ideaportal.models.ParticipationResponse;
 import com.ideaportal.models.ResponseMessage;
 import com.ideaportal.models.Themes;
+import com.ideaportal.models.ThemesCategory;
 import com.ideaportal.models.User;
 
 import io.jsonwebtoken.Jwts;
@@ -325,5 +326,31 @@ public class UserService {
 			return responseMessage;
 
 		}
+		
+		public ResponseMessage<List<ThemesCategory>> getCategories() 
+		{
+			List<ThemesCategory> list=userDAO.getThemeCategories();
+			
+			ResponseMessage<List<ThemesCategory>> responseMessage=new ResponseMessage<>();
+			
+			int size=list.size();
+			
+			if(size==0)
+			{
+				
+				responseMessage.setResult(null);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("No Categories present");
+			}
+			else
+			{
+				responseMessage.setResult(list);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("All Themes Categories");
+				responseMessage.setTotalElements(size);
 
+			}
+			return responseMessage;
+
+		}
 }
