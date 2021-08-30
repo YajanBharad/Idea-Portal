@@ -28,10 +28,13 @@ public class Ideas {
 	@Column(name="idea_id")
 	private long ideaId;
 	
+	
+	
+	
 	@Column(name="idea_description",columnDefinition = "TEXT",nullable = false)
 	private String ideaDescription;
 	
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "theme")
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "idea")
 	private List<ThemeIdeaFiles> ideaFiles;
 	
 	@ManyToOne
@@ -107,6 +110,7 @@ public class Ideas {
 	public void setIdeaDate(Date ideaDate) {
 		this.ideaDate = ideaDate;
 	}
+	
 
 	@Override
 	public String toString() {

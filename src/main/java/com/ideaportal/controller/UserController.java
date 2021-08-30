@@ -31,6 +31,7 @@ import com.ideaportal.models.Login;
 import com.ideaportal.models.ParticipationResponse;
 import com.ideaportal.models.ResponseMessage;
 import com.ideaportal.models.Themes;
+import com.ideaportal.models.ThemesCategory;
 import com.ideaportal.models.User;
 import com.ideaportal.repo.ParticipationRepository;
 import com.ideaportal.services.UserService;
@@ -255,4 +256,22 @@ public class UserController {
 
     	return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
   	}
+  	
+   @PostMapping(path="user/theme/themecategory")
+   public ResponseEntity<ResponseMessage<ThemesCategory>> createThemeCategory(@RequestBody ThemesCategory category) throws Exception
+   {
+	   int id=utils.isCategoryPresent(category.getThemeCategoryName());
+	   if(id==1)
+		   throw new Exception("Category Already Present");
+	   ResponseMessage<ThemesCategory> responseMessage=userDAO.addCategory(category);
+	   return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
+   }
+   
+   @GetMapping(path="theme/all/themecategory")
+   public ResponseEntity<ResponseMessage<List<ThemesCategory>>> showThemeCategory()
+   {
+	   ResponseMessage<List<ThemesCategory>> responseMessage = userService.getCategories();
+
+   	return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
+   }
 }
