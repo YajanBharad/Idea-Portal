@@ -8540,3 +8540,5 @@ Unconditional classes:
 2021-09-01 16:04:26.165 DEBUG 9272 --- [http-nio-8081-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Using 'application/json', given [*/*] and supported [application/json, application/*+json, application/json, application/*+json]
 2021-09-01 16:04:26.172 DEBUG 9272 --- [http-nio-8081-exec-1] o.s.w.s.m.m.a.HttpEntityMethodProcessor  : Writing [java.lang.StackOverflowError]
 2021-09-01 16:04:26.204 DEBUG 9272 --- [http-nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 201 CREATED
+2021-09-01 16:38:47.098  WARN 9272 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=5m29s640ms259µs400ns).
+2021-09-01 17:34:30.915  WARN 9272 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=38m13s531ms438µs300ns).
