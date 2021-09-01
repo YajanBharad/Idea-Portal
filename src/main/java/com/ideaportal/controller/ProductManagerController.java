@@ -94,6 +94,7 @@ public class ProductManagerController {
 		idea.setIdeaDate(timestamp);
 		
 		idea.setIdeaDescription(ideaDescription);
+		idea.setIdeaName(ideaName);
 		idea.setTheme(themes);
 		idea.setUser(user);
 		
