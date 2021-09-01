@@ -60,7 +60,7 @@ public class UserService {
          String path = dir + File.separator + filename;
          Path filePath = Paths.get(path);
         try {
-             InputStream fileInputStream = file.getInputStream();
+             InputStream fileInputStream = file.getInputStream(); 
             Files.copy(fileInputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
             return true;
         }
@@ -388,12 +388,12 @@ public class UserService {
 		public ResponseMessage<List<Ideas>> getIdeasByMostLikesResponseMessage(long themeID)
 		{
 			ResponseMessage<List<Ideas>> responseMessage=new ResponseMessage<>();
-			
+
 			List<Ideas> list=userDAO.getIdeasByMostLikesList(themeID);
-			
+
 			if(list.isEmpty())
 			{
-				
+
 				responseMessage.setResult(null);
 				responseMessage.setStatus(HttpStatus.OK.value());
 				responseMessage.setStatusText("NO_IDEAS_SUBMITTED");
@@ -411,14 +411,14 @@ public class UserService {
 		public ResponseMessage<List<Ideas>> getIdeasByMostCommentsResponseMessage(long themeID)
 		{
 			ResponseMessage<List<Ideas>> responseMessage=new ResponseMessage<>();
-			
-			List<Ideas> list=userDAO.getIdeasByMostCommentsList(themeID);
-			
 
-			
+			List<Ideas> list=userDAO.getIdeasByMostCommentsList(themeID);
+
+
+
 			if(list.isEmpty())
 			{
-				
+
 				responseMessage.setResult(null);
 				responseMessage.setStatus(HttpStatus.OK.value());
 				responseMessage.setStatusText("NO_IDEAS_SUBMITTED");
@@ -433,5 +433,4 @@ public class UserService {
 			}
 			return responseMessage;
 		}
-
 }

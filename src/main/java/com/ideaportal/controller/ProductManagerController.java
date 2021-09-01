@@ -92,7 +92,7 @@ public class ProductManagerController {
 		Timestamp timestamp=Timestamp.valueOf(LocalDateTime.now());
 	
 		idea.setIdeaDate(timestamp);
-		
+		idea.setIdeaName(ideaName);
 		idea.setIdeaDescription(ideaDescription);
 		idea.setTheme(themes);
 		idea.setUser(user);
