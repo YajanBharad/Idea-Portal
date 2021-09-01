@@ -141,7 +141,7 @@ public class ClientPartnerController {
 					thf.setIdeaId(null);
 					thf.setUser(dbUser);
 					
-			       thf.setThemeideaUrl(mainURL + File.separator + uploads_constant + File.separator + fileName);
+			       thf.setThemeideaUrl(mainURL +File.separator + uploads_constant + File.separator + fileName);
 					
 					thf.setFileType(FilenameUtils.getExtension(fileName));
 					
