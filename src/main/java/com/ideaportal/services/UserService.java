@@ -55,12 +55,12 @@ public class UserService {
 					.claim("user", user)
 	                .compact(); //builds the token
 	    }
-	public boolean saveFile(final MultipartFile file, final File dir) {
-        final String filename = file.getOriginalFilename();
-        final String path = dir + File.separator + filename;
-        final Path filePath = Paths.get(path, new String[0]);
+	public boolean saveFile( MultipartFile file,  File dir) {
+         String filename = file.getOriginalFilename();
+         String path = dir + File.separator + filename;
+         Path filePath = Paths.get(path);
         try {
-            final InputStream fileInputStream = file.getInputStream();
+             InputStream fileInputStream = file.getInputStream();
             Files.copy(fileInputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
             return true;
         }
