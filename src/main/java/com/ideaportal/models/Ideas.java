@@ -28,8 +28,6 @@ public class Ideas {
 	@Column(name="idea_id")
 	private long ideaId;
 
-	@Column(nullable = false, columnDefinition = "TEXT")
-	private String ideaName;
 
 	@Column(name="idea_description",columnDefinition = "TEXT",nullable = false)
 	private String ideaDescription;
@@ -112,13 +110,7 @@ public class Ideas {
 	}
 	
 
-	public String getIdeaName() {
-		return ideaName;
-	}
-
-	public void setIdeaName(String ideaName) {
-		this.ideaName = ideaName;
-	}
+	
 
 	@Override
 	public String toString() {
