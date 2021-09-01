@@ -30,7 +30,6 @@ public class Ideas {
 	
 	
 	
-	
 	@Column(name="idea_description",columnDefinition = "TEXT",nullable = false)
 	private String ideaDescription;
 	

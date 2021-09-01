@@ -274,4 +274,53 @@ public class UserController {
 
    	return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
    }
+   
+   @GetMapping(value="/themes/{themeID}/ideas/mostlikes")
+   public ResponseEntity<ResponseMessage<List<Ideas>>> getIdeasByMostLikesForTheme(@PathVariable("themeID") long themeID) throws Exception
+   {
+       
+
+   	Themes theme=utils.findThemeByID(themeID);
+   	
+   	if(theme==null) {
+   	    
+           throw new Exception("THEME_NOT_FOUND");
+       }
+
+   	ResponseMessage<List<Ideas>> responseMessage = userService.getIdeasByMostLikesResponseMessage(themeID);
+
+      
+
+   	return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
+   }
+   @GetMapping(value="/themes/{themeID}/ideas/mostcomments")
+   public ResponseEntity<ResponseMessage<List<Ideas>>> getIdeasByMostCommentsForTheme(@PathVariable ("themeID") long themeID) throws Exception
+   {
+     
+
+       Themes theme=utils.findThemeByID(themeID);
+
+       if(theme==null) {
+         
+           throw new Exception("THEME_NOT_FOUND");
+       }
+
+       ResponseMessage<List<Ideas>> responseMessage = userService.getIdeasByMostCommentsResponseMessage(themeID);
+
+      
+       return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
+   }
+  
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+   
+   
+   
+   
 }

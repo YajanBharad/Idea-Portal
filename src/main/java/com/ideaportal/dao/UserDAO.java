@@ -240,5 +240,27 @@ public class UserDAO {
 
 				});
 			}
+		   public List<Ideas> getIdeasByMostLikesList(long themeID)
+			{
+				
+				return jdbcTemplate.execute("select Ideas.idea_id, SUM(Likes.like_value) from Ideas left outer join Likes on Likes.idea_id=Ideas.idea_id where theme_id= ? GROUP BY(idea_id) ORDER BY SUM(Likes.like_value) DESC, Ideas.idea_id ASC", (PreparedStatementCallback<List<Ideas>>) ps -> {
+					ps.setLong(1, themeID);
+
+					ResultSet rSet=ps.executeQuery();
+
+					return utils.buildList(rSet);
+				});
+			}
+		   public List<Ideas> getIdeasByMostCommentsList(long themeID) 
+			{
+				return jdbcTemplate.execute("select Ideas.idea_id, COUNT(Comments.comment_value) from Ideas left outer join Comments on Comments.idea_id=Ideas.idea_id where theme_id=?  GROUP BY (idea_id) ORDER BY COUNT(Comments.comment_value) DESC, Ideas.idea_id ASC", (PreparedStatementCallback<List<Ideas>>) ps -> {
+					ps.setLong(1, themeID);
+
+					ResultSet resultSet=ps.executeQuery();
+
+					return utils.buildList(resultSet);
+
+				});
+			}
 
 }
