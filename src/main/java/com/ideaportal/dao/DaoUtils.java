@@ -1,6 +1,7 @@
 package com.ideaportal.dao;
 
 import java.sql.ResultSet;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,13 +9,13 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.stereotype.Repository;
 
 import com.ideaportal.models.Comments;
 import com.ideaportal.models.Ideas;
+
 import com.ideaportal.models.Likes;
 import com.ideaportal.models.ParticipationResponse;
 import com.ideaportal.models.Themes;
@@ -45,6 +46,8 @@ public class DaoUtils {
 	
 	@Autowired
 	IdeasRepository ideasRepository;
+	
+	
 	public User findByUserId(final long userID) {
         User user = null;
         try {
@@ -163,7 +166,7 @@ public class DaoUtils {
 	}
 	public String isIdeaLiked(Likes likes) 
 	{
-		final Boolean  likeValue=likes.getLikeValue();
+		final boolean likeValue=likes.getLikeValue();
 		
 		return jdbcTemplate.execute("select like_value from Likes where  user_id=? and  idea_id=?", (PreparedStatementCallback<String>) ps -> {
 			ps.setLong(1, likes.getUser().getUserId());
@@ -277,4 +280,30 @@ public class DaoUtils {
 	    	else
 	    		return 0L;
 	 }
+	 public int isCategoryPresent(String category)
+	 {
+		 return jdbcTemplate.execute("select theme_category_id from themescategory where theme_category_name=?", (PreparedStatementCallback<Integer>) ps -> {
+				ps.setString(1, category);
+
+				ResultSet resultSet=ps.executeQuery();
+
+				if(resultSet.next())
+					return 1;
+				else
+					return -1;
+			});
+		 
+	 }
+	 public List<ThemesCategory> buildCategoriesList(ResultSet resultSet) throws SQLException 
+		{
+			List<ThemesCategory> list=new ArrayList<>();
+			
+			while(resultSet.next())
+			{
+				Optional<ThemesCategory> optional=themesCategoryRepository.findById(resultSet.getLong(1));
+				list.add(optional.orElse(null));
+			}
+			return list;
+		}
+	 
 }

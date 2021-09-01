@@ -31,6 +31,7 @@ import com.ideaportal.models.Login;
 import com.ideaportal.models.ParticipationResponse;
 import com.ideaportal.models.ResponseMessage;
 import com.ideaportal.models.Themes;
+import com.ideaportal.models.ThemesCategory;
 import com.ideaportal.models.User;
 import com.ideaportal.repo.ParticipationRepository;
 import com.ideaportal.services.UserService;
@@ -203,6 +204,23 @@ public class UserController {
 
     	return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
     }
+    @GetMapping(value = "idea/{ideaID}/dislikes")
+    public ResponseEntity<ResponseMessage<List<User>>> getDislikesForIdea(@PathVariable ("ideaID") long ideaID) throws Exception
+    {
+        
+    	Ideas idea=utils.isIdeaIDValid(ideaID);
+    	if(idea==null) {
+            
+            throw new Exception("Idea not found");
+        }
+       
+
+        ResponseMessage<List<User>> responseMessage = userService.getDislikesForIdeaResponseMessage(ideaID);
+
+        
+
+    	return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
+    }
     
   //interest in idea
   	@PostMapping(path="/idea/interested")
@@ -238,4 +256,71 @@ public class UserController {
 
     	return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
   	}
+  	
+   @PostMapping(path="user/theme/themecategory")
+   public ResponseEntity<ResponseMessage<ThemesCategory>> createThemeCategory(@RequestBody ThemesCategory category) throws Exception
+   {
+	   int id=utils.isCategoryPresent(category.getThemeCategoryName());
+	   if(id==1)
+		   throw new Exception("Category Already Present");
+	   ResponseMessage<ThemesCategory> responseMessage=userDAO.addCategory(category);
+	   return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
+   }
+   
+   @GetMapping(path="theme/all/themecategory")
+   public ResponseEntity<ResponseMessage<List<ThemesCategory>>> showThemeCategory()
+   {
+	   ResponseMessage<List<ThemesCategory>> responseMessage = userService.getCategories();
+
+   	return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
+   }
+   
+   @GetMapping(value="/themes/{themeID}/ideas/mostlikes")
+   public ResponseEntity<ResponseMessage<List<Ideas>>> getIdeasByMostLikesForTheme(@PathVariable("themeID") long themeID) throws Exception
+   {
+       
+
+   	Themes theme=utils.findThemeByID(themeID);
+   	
+   	if(theme==null) {
+   	    
+           throw new Exception("THEME_NOT_FOUND");
+       }
+
+   	ResponseMessage<List<Ideas>> responseMessage = userService.getIdeasByMostLikesResponseMessage(themeID);
+
+      
+
+   	return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
+   }
+   @GetMapping(value="/themes/{themeID}/ideas/mostcomments")
+   public ResponseEntity<ResponseMessage<List<Ideas>>> getIdeasByMostCommentsForTheme(@PathVariable ("themeID") long themeID) throws Exception
+   {
+     
+
+       Themes theme=utils.findThemeByID(themeID);
+
+       if(theme==null) {
+         
+           throw new Exception("THEME_NOT_FOUND");
+       }
+
+       ResponseMessage<List<Ideas>> responseMessage = userService.getIdeasByMostCommentsResponseMessage(themeID);
+
+      
+       return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
+   }
+  
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+	   
+   
+   
+   
+   
 }

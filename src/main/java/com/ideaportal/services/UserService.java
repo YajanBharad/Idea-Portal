@@ -26,6 +26,7 @@ import com.ideaportal.models.Login;
 import com.ideaportal.models.ParticipationResponse;
 import com.ideaportal.models.ResponseMessage;
 import com.ideaportal.models.Themes;
+import com.ideaportal.models.ThemesCategory;
 import com.ideaportal.models.User;
 
 import io.jsonwebtoken.Jwts;
@@ -279,6 +280,34 @@ public class UserService {
 			return responseMessage;
 
 		}
+
+		public ResponseMessage<List<User>> getDislikesForIdeaResponseMessage(long ideaID) 
+		{
+			List<User> list=userDAO.getDislikesForIdeaList(ideaID);
+			ResponseMessage<List<User>> responseMessage=new ResponseMessage<>();
+			
+			int size=list.size();
+			
+			if(size==0)
+			{
+				
+				responseMessage.setResult(null);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("NO Dislikes");
+			}
+			else
+			{
+				responseMessage.setResult(list);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("Dislike list");
+				responseMessage.setTotalElements(size);
+
+			}
+			return responseMessage;
+
+		}
+			
+			
 		public ResponseMessage<ParticipationResponse> enrollParticipant(ParticipationResponse participant) throws Exception
 		{
 			ParticipationResponse partresponse=userDAO.enrollResponse(participant);
@@ -302,6 +331,7 @@ public class UserService {
 		public ResponseMessage<List<User>> getParticipantsForIdea(long ideaId) 
 		{
 			List<User> list=userDAO.getParticipantList(ideaId);
+
 			
 			ResponseMessage<List<User>> responseMessage=new ResponseMessage<>();
 			
@@ -313,17 +343,95 @@ public class UserService {
 				responseMessage.setResult(null);
 				responseMessage.setStatus(HttpStatus.OK.value());
 				responseMessage.setStatusText("NO Participants");
+
 			}
 			else
 			{
 				responseMessage.setResult(list);
 				responseMessage.setStatus(HttpStatus.OK.value());
+
 				responseMessage.setStatusText("Participant's List");
+
 				responseMessage.setTotalElements(size);
 
 			}
 			return responseMessage;
 
+		}
+		
+		public ResponseMessage<List<ThemesCategory>> getCategories() 
+		{
+			List<ThemesCategory> list=userDAO.getThemeCategories();
+			
+			ResponseMessage<List<ThemesCategory>> responseMessage=new ResponseMessage<>();
+			
+			int size=list.size();
+			
+			if(size==0)
+			{
+				
+				responseMessage.setResult(null);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("No Categories present");
+			}
+			else
+			{
+				responseMessage.setResult(list);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("All Themes Categories");
+				responseMessage.setTotalElements(size);
+
+			}
+			return responseMessage;
+
+		}
+		public ResponseMessage<List<Ideas>> getIdeasByMostLikesResponseMessage(long themeID)
+		{
+			ResponseMessage<List<Ideas>> responseMessage=new ResponseMessage<>();
+			
+			List<Ideas> list=userDAO.getIdeasByMostLikesList(themeID);
+			
+			if(list.isEmpty())
+			{
+				
+				responseMessage.setResult(null);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("NO_IDEAS_SUBMITTED");
+
+			}
+			else
+			{
+				responseMessage.setResult(list);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("LIST_ALL_IDEAS");
+				responseMessage.setTotalElements(list.size());
+			}
+			return responseMessage;
+		}
+		public ResponseMessage<List<Ideas>> getIdeasByMostCommentsResponseMessage(long themeID)
+		{
+			ResponseMessage<List<Ideas>> responseMessage=new ResponseMessage<>();
+			
+			List<Ideas> list=userDAO.getIdeasByMostCommentsList(themeID);
+			
+
+			
+			if(list.isEmpty())
+			{
+				
+				responseMessage.setResult(null);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("NO_IDEAS_SUBMITTED");
+
+			}
+			else
+			{
+				responseMessage.setResult(list);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("LIST_ALL_IDEAS");
+				responseMessage.setTotalElements(list.size());
+			}
+			return responseMessage;
 		}
 
 }
