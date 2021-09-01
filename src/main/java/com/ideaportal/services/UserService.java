@@ -385,4 +385,53 @@ public class UserService {
 			return responseMessage;
 
 		}
+		public ResponseMessage<List<Ideas>> getIdeasByMostLikesResponseMessage(long themeID)
+		{
+			ResponseMessage<List<Ideas>> responseMessage=new ResponseMessage<>();
+			
+			List<Ideas> list=userDAO.getIdeasByMostLikesList(themeID);
+			
+			if(list.isEmpty())
+			{
+				
+				responseMessage.setResult(null);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("NO_IDEAS_SUBMITTED");
+
+			}
+			else
+			{
+				responseMessage.setResult(list);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("LIST_ALL_IDEAS");
+				responseMessage.setTotalElements(list.size());
+			}
+			return responseMessage;
+		}
+		public ResponseMessage<List<Ideas>> getIdeasByMostCommentsResponseMessage(long themeID)
+		{
+			ResponseMessage<List<Ideas>> responseMessage=new ResponseMessage<>();
+			
+			List<Ideas> list=userDAO.getIdeasByMostCommentsList(themeID);
+			
+
+			
+			if(list.isEmpty())
+			{
+				
+				responseMessage.setResult(null);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("NO_IDEAS_SUBMITTED");
+
+			}
+			else
+			{
+				responseMessage.setResult(list);
+				responseMessage.setStatus(HttpStatus.OK.value());
+				responseMessage.setStatusText("LIST_ALL_IDEAS");
+				responseMessage.setTotalElements(list.size());
+			}
+			return responseMessage;
+		}
+
 }

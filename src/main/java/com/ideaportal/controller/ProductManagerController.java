@@ -24,8 +24,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +43,16 @@ import com.ideaportal.services.UserService;
 public class ProductManagerController {
 	@Autowired
 	UserService userService;
+	
+	@Value("${server.servlet.context-path}")
+	private String contextPath;
+
+	@Value("${server.domain}")
+	private String domain;
+
+	@Value("${server.port}")
+	private String port;
+
 
 	
 	@Autowired
@@ -95,7 +104,7 @@ public class ProductManagerController {
 		String uploads_constant = null;
 
 		
-			mainURL = "http://" + "localhost" + ":" + "8081" + "/";
+			mainURL = "http://" + domain + ":" + port + contextPath;
 			uploads_constant = "Uploads" + File.separator + "Themes" + File.separator + cpUserName + File.separator +
 					themeID + File.separator + "Ideas" + File.separator + userName + File.separator +
 					responseMessage.getResult().getIdeaId() + File.separator + timestamp.getTime();
@@ -134,5 +143,6 @@ public class ProductManagerController {
 		return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
 	
 	}
+	
 	
 }
