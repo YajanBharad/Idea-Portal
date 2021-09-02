@@ -55,20 +55,20 @@ public class UserService {
 					.claim("user", user)
 	                .compact(); //builds the token
 	    }
-	public boolean saveFile( MultipartFile file,  String URL,String name,long id) {
-         String filename = name+"."+id+"."+file.getOriginalFilename();
-         String path = URL + File.separator + filename;
-         Path filePath = Paths.get(path);
-        try {
-             InputStream fileInputStream = file.getInputStream(); 
-            Files.copy(fileInputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-            return true;
-        }
-        catch (IOException e) {
-           
-            return false;
-        }
-    }
+	  public boolean saveFile(final MultipartFile file, final File dir) {
+	        final String filename = file.getOriginalFilename();
+	        final String path = dir + File.separator + filename;
+	        final Path filePath = Paths.get(path, new String[0]);
+	        try {
+	            final InputStream fileInputStream = file.getInputStream();
+	            Files.copy(fileInputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+	            return true;
+	        }
+	        catch (IOException e) {
+	           
+	            return false;
+	        }
+	    }
 	 public ResponseMessage<User> addUser(User userDetails)throws InvalidRoleException, IllegalArgumentException
 	    {
 	    

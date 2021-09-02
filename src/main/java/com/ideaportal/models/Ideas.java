@@ -30,7 +30,7 @@ public class Ideas {
 	@Column(name="idea_id")
 	private long ideaId;
 	
-	@Column(name="idea_name",columnDefinition = "TEXT",nullable = false)
+	@Column(name="ideaName",columnDefinition = "TEXT",nullable = false)
 	private String ideaName;
 
 	@Column(name="idea_description",columnDefinition = "TEXT",nullable = false)

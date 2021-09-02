@@ -98,14 +98,12 @@ public class ProductManagerController {
 		idea.setIdeaName(ideaName);
 
 		ResponseMessage<Ideas> responseMessage = pmService.createNewIdeaResponseMessage(idea);
-
 		String mainURL = null;
 		String uploads_constant = null;
-
-		
-			mainURL = "D:\\IdeaPortalProject\\portal\\src\\main\\resources\\Uploads\\Ideas";
-			uploads_constant = userName + File.separator +responseMessage.getResult().getIdeaId() + 
-								File.separator + timestamp.getTime();
+		mainURL = "http://" + "localhost" + ":" + "8081" + "/";
+		uploads_constant = "Uploads" + File.separator + "Themes" + File.separator + cpUserName + File.separator +
+				themeID + File.separator + "Ideas" + File.separator + userName + File.separator +
+				responseMessage.getResult().getIdeaId() + File.separator + timestamp.getTime();
 		
 		if(files!=null) {
 			for (MultipartFile myFile : files) {
@@ -119,17 +117,17 @@ public class ProductManagerController {
 							LOGGER.info("Directory created successfully");
 						else
 							LOGGER.info("Directory was not created");
-						boolean saveStatus = userService.saveFile(myFile, mainURL,userName+"."+themes.getThemeId(),idea.getIdeaId());
+						boolean saveStatus = userService.saveFile(myFile, dir);
 						if (saveStatus)
 							LOGGER.info("File saved at local machine successfully");
 					 
-					String fileName = userName+"."+themes.getThemeId()+"."+idea.getIdeaId()+"."+myFile.getOriginalFilename();
+					String fileName = myFile.getOriginalFilename();
 					ThemeIdeaFiles thf = new ThemeIdeaFiles();
 
 					thf.setIdeaId(idea);
 					thf.setThemeId(themes);
 					thf.setUser(user);
-					thf.setThemeideaUrl(mainURL + File.separator + fileName);
+					thf.setThemeideaUrl(mainURL + File.separator + uploads_constant + File.separator + fileName);
 					thf.setFileType(FilenameUtils.getExtension(fileName));
 					thf.setFileName(myFile.getOriginalFilename());
 					thfList.add(thf);

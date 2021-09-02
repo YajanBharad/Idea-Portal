@@ -109,11 +109,12 @@ public class ClientPartnerController {
 
 		ResponseMessage<Themes> responseMessage = clientpartnerServices.saveTheme(themes);
 
-		 final String mainURL =  "D:\\IdeaPortalProject\\portal\\src\\main\\resources\\Uploads\\Themes";
+		String mainURL = null;
+		String uploads_constant = null;
+		mainURL = "http://" + domain + ":" + port + contextPath;
+		uploads_constant = "Uploads" + File.separator + "Themes" + File.separator + userName + File.separator +
+		responseMessage.getResult().getThemeId() + File.separator ;
 		 
-		final String uploads_constant=File.separator + userName + File.separator +
-				responseMessage.getResult().getThemeId();
-	
 			if(files!=null) {
 			for (MultipartFile myFile : files) {
 				if (!myFile.isEmpty()) {
@@ -125,23 +126,18 @@ public class ClientPartnerController {
 							LOGGER.info("Directory created successfully");
 						else
 							LOGGER.info("Directory was not created");
-						boolean saveStatus = userService.saveFile(myFile, mainURL,userName,themes.getThemeId());
+						boolean saveStatus = userService.saveFile(myFile, dir);
 						if (saveStatus)
-							LOGGER.info("File saved at local machine successfully");
+							LOGGER.info("File saved at local machine");
 					 
-					String fileName = userName+"."+themes.getThemeId()+"."+myFile.getOriginalFilename();
+					String fileName = myFile.getOriginalFilename();
 					ThemeIdeaFiles thf = new ThemeIdeaFiles();
-
-
 					thf.setThemeId(themes);
 					thf.setIdeaId(null);
 					thf.setUser(dbUser);
-					
-			       thf.setThemeideaUrl(mainURL + File.separator + fileName);
-					
+					thf.setThemeideaUrl(mainURL + File.separator + uploads_constant + File.separator + fileName);
 					thf.setFileType(FilenameUtils.getExtension(fileName));
-					
-					thf.setFileName(myFile.getOriginalFilename());
+					thf.setFileName(fileName);
 					thflist.add(thf);
 					themes.setThemeFiles(thflist);
 				}
