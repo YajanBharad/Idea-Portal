@@ -95,7 +95,7 @@ public class ProductManagerController {
 		idea.setIdeaDescription(ideaDescription);
 		idea.setTheme(themes);
 		idea.setUser(user);
-		
+		idea.setIdeaName(ideaName);
 
 		ResponseMessage<Ideas> responseMessage = pmService.createNewIdeaResponseMessage(idea);
 

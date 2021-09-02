@@ -29,6 +29,9 @@ public class Ideas {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="idea_id")
 	private long ideaId;
+	
+	@Column(name="idea_name",columnDefinition = "TEXT",nullable = false)
+	private String ideaName;
 
 	@Column(name="idea_description",columnDefinition = "TEXT",nullable = false)
 	private String ideaDescription;
@@ -52,9 +55,10 @@ public class Ideas {
 	public Ideas() {
 	}
 
-	public Ideas(long ideaId,String ideaDescription, List<ThemeIdeaFiles> ideaFiles, Themes theme, User user,
+	public Ideas(long ideaId,String ideaName,String ideaDescription, List<ThemeIdeaFiles> ideaFiles, Themes theme, User user,
 			Date ideaDate) {
 		this.ideaId = ideaId;
+		this.ideaName=ideaName;
 		this.ideaDescription = ideaDescription;
 		this.ideaFiles = ideaFiles;
 		this.theme = theme;
@@ -70,6 +74,14 @@ public class Ideas {
 		this.ideaId = ideaId;
 	}
 
+	
+	public String getIdeaName() {
+		return ideaName;
+	}
+
+	public void setIdeaName(String ideaName) {
+		this.ideaName = ideaName;
+	}
 
 	public String getIdeaDescription() {
 		return ideaDescription;
