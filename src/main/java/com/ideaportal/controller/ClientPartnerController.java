@@ -109,18 +109,14 @@ public class ClientPartnerController {
 
 		ResponseMessage<Themes> responseMessage = clientpartnerServices.saveTheme(themes);
 
-		String mainURL = null;
-		String uploads_constant = null;
-
-		
-			mainURL = "http://" + domain + ":" + port + contextPath;
-
-			uploads_constant = "Uploads" + File.separator + "Themes" + File.separator + userName + File.separator +
-					responseMessage.getResult().getThemeId() + File.separator ;
+		 final String mainURL =  "D:\\IdeaPortalProject\\portal\\src\\main\\resources\\Uploads\\Themes";
+		 
+		final String uploads_constant=File.separator + userName + File.separator +
+				responseMessage.getResult().getThemeId();
+	
 			if(files!=null) {
 			for (MultipartFile myFile : files) {
 				if (!myFile.isEmpty()) {
-
 						boolean dirStatus = false;
 						File dir = new File(context.getRealPath(uploads_constant));
 						if (!dir.exists())
@@ -129,11 +125,11 @@ public class ClientPartnerController {
 							LOGGER.info("Directory created successfully");
 						else
 							LOGGER.info("Directory was not created");
-						boolean saveStatus = userService.saveFile(myFile, dir);
+						boolean saveStatus = userService.saveFile(myFile, mainURL,userName,themes.getThemeId());
 						if (saveStatus)
 							LOGGER.info("File saved at local machine successfully");
 					 
-					String fileName = myFile.getOriginalFilename();
+					String fileName = userName+"."+themes.getThemeId()+"."+myFile.getOriginalFilename();
 					ThemeIdeaFiles thf = new ThemeIdeaFiles();
 
 
@@ -141,11 +137,11 @@ public class ClientPartnerController {
 					thf.setIdeaId(null);
 					thf.setUser(dbUser);
 					
-			       thf.setThemeideaUrl(mainURL +File.separator + uploads_constant + File.separator + fileName);
+			       thf.setThemeideaUrl(mainURL + File.separator + fileName);
 					
 					thf.setFileType(FilenameUtils.getExtension(fileName));
 					
-					thf.setFileName(fileName);
+					thf.setFileName(myFile.getOriginalFilename());
 					thflist.add(thf);
 					themes.setThemeFiles(thflist);
 				}

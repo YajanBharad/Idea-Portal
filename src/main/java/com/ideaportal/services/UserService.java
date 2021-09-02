@@ -55,9 +55,9 @@ public class UserService {
 					.claim("user", user)
 	                .compact(); //builds the token
 	    }
-	public boolean saveFile( MultipartFile file,  File dir) {
-         String filename = file.getOriginalFilename();
-         String path = dir + File.separator + filename;
+	public boolean saveFile( MultipartFile file,  String URL,String name,long id) {
+         String filename = name+"."+id+"."+file.getOriginalFilename();
+         String path = URL + File.separator + filename;
          Path filePath = Paths.get(path);
         try {
              InputStream fileInputStream = file.getInputStream(); 

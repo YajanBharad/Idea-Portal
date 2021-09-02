@@ -73,7 +73,7 @@ public class ProductManagerController {
 	final ObjectMapper objectMapper = new ObjectMapper();
 
 	@PostMapping(value = "/user/create/idea")
-	public ResponseEntity<ResponseMessage<Ideas>> createNewIdea(@RequestParam ("userID") String userID, @RequestParam("themeID") String themeID,@RequestParam("ideaName") String ideaName, @RequestParam("ideaDescription") String ideaDescription,
+	public ResponseEntity<ResponseMessage<Ideas>> createNewIdea(@RequestParam ("userID") String userID, @RequestParam("themeID") String themeID,@RequestParam("ideaName")String ideaName, @RequestParam("ideaDescription") String ideaDescription,
 																@RequestParam(value = "files", required = false) MultipartFile [] files) throws  IOException, URISyntaxException {
 
 		
@@ -103,11 +103,9 @@ public class ProductManagerController {
 		String uploads_constant = null;
 
 		
-			mainURL = "http://" + domain + ":" + port + contextPath;
-			uploads_constant = "Uploads" + File.separator + "Themes" + File.separator + cpUserName + File.separator +
-					themeID + File.separator + "Ideas" + File.separator + userName + File.separator +
-					responseMessage.getResult().getIdeaId() + File.separator + timestamp.getTime();
-		
+			mainURL = "D:\\IdeaPortalProject\\portal\\src\\main\\resources\\Uploads\\Ideas";
+			uploads_constant = userName + File.separator +responseMessage.getResult().getIdeaId() + 
+								File.separator + timestamp.getTime();
 		
 		if(files!=null) {
 			for (MultipartFile myFile : files) {
@@ -119,21 +117,25 @@ public class ProductManagerController {
 							dirStatus = dir.mkdirs();
 						if (dirStatus)
 							LOGGER.info("Directory created successfully");
-						
+						else
+							LOGGER.info("Directory was not created");
+						boolean saveStatus = userService.saveFile(myFile, mainURL,userName+"."+themes.getThemeId(),idea.getIdeaId());
+						if (saveStatus)
+							LOGGER.info("File saved at local machine successfully");
 					 
-					}
-					String fileName = myFile.getOriginalFilename();
+					String fileName = userName+"."+themes.getThemeId()+"."+idea.getIdeaId()+"."+myFile.getOriginalFilename();
 					ThemeIdeaFiles thf = new ThemeIdeaFiles();
 
 					thf.setIdeaId(idea);
 					thf.setThemeId(themes);
 					thf.setUser(user);
-					thf.setThemeideaUrl(mainURL + File.separator + uploads_constant + File.separator + fileName);
+					thf.setThemeideaUrl(mainURL + File.separator + fileName);
 					thf.setFileType(FilenameUtils.getExtension(fileName));
-					thf.setFileName(fileName);
+					thf.setFileName(myFile.getOriginalFilename());
 					thfList.add(thf);
 					idea.setIdeaFiles(thfList);
 				}
+			}
 			
 		}
 		this.pmService.saveArtifacts(thfList,responseMessage.getResult().getIdeaId() );

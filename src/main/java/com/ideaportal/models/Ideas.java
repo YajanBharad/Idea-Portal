@@ -30,7 +30,6 @@ public class Ideas {
 	@Column(name="idea_id")
 	private long ideaId;
 
-
 	@Column(name="idea_description",columnDefinition = "TEXT",nullable = false)
 	private String ideaDescription;
 	
@@ -53,7 +52,7 @@ public class Ideas {
 	public Ideas() {
 	}
 
-	public Ideas(long ideaId, String ideaDescription, List<ThemeIdeaFiles> ideaFiles, Themes theme, User user,
+	public Ideas(long ideaId,String ideaDescription, List<ThemeIdeaFiles> ideaFiles, Themes theme, User user,
 			Date ideaDate) {
 		this.ideaId = ideaId;
 		this.ideaDescription = ideaDescription;
@@ -70,6 +69,7 @@ public class Ideas {
 	public void setIdeaId(long ideaId) {
 		this.ideaId = ideaId;
 	}
+
 
 	public String getIdeaDescription() {
 		return ideaDescription;
