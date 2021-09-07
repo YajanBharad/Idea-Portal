@@ -2,6 +2,7 @@ package com.ideaportal.dao;
 
 import java.sql.ResultSet;
 
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCallback;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Repository;
 
 import com.ideaportal.models.Comments;
@@ -304,6 +306,15 @@ public class DaoUtils {
 				list.add(optional.orElse(null));
 			}
 			return list;
+		}
+//		Checks whether the new password is same as the old one
+		public boolean isEqualToOldPassword(User userDetail) 
+		{
+			User userToUpdate=null;
+			userToUpdate=findByUserId(userDetail.getUserId());
+			if(userToUpdate!=null &&  BCrypt.checkpw(userDetail.getUserPassword(),userToUpdate.getUserPassword()))
+				return true;
+	    	return false;
 		}
 	 
 }

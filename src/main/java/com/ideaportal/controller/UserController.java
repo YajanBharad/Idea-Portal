@@ -311,18 +311,14 @@ public class UserController {
        return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
    }
    
-   
+ //Function to update user password
+   @PutMapping(value = {"/user/profile/update/password", "/login/savePassword"})
+   public ResponseEntity<ResponseMessage<User>> updateUserPassword(@RequestBody UserDTO userDTO)
+   {
+       User userDetail = modelMapper.map(userDTO, User.class);
+   	   ResponseMessage<User> responseMessage=userService.saveUserPasswordResponseMessage(userDetail);
+   	return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(responseMessage.getStatus()));
+   }
   
-	   
-	   
-	   
-	   
-	   
-	   
-	   
-	   
-   
-   
-   
-   
+
 }

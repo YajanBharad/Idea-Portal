@@ -262,5 +262,26 @@ public class UserDAO {
 
 				});
 			}
+		   public User updatePassword(User userDetail) 
+		    {
+		        User user = null;
+		        
+		        try
+		        {
+		        	user=userRepository.findById(userDetail.getUserId()).orElse(null);
+		        }catch(NoSuchElementException e) {
+		        	return user;
+		        }
+
+		        String hashedUserPassword = BCrypt.hashpw(userDetail.getUserPassword(), BCrypt.gensalt(10));
+
+		        if (user != null) {
+					user.setUserPassword(hashedUserPassword);
+
+					return userRepository.save(user);
+				}
+		        else 
+		        	return user;
+		    }
 
 }

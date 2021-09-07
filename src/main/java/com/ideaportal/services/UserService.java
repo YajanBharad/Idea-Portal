@@ -433,4 +433,31 @@ public class UserService {
 			}
 			return responseMessage;
 		}
+		
+		//Service updates the password of the user
+		public ResponseMessage<User> saveUserPasswordResponseMessage(User userDetail) 
+		{
+	    	if (utils.isEqualToOldPassword(userDetail)) {
+				throw new UserAuthException("This password has been used by you earlier! Enter new Password");
+			}
+	    	ResponseMessage<User> responseMessage=new ResponseMessage<>();
+	    	
+	    	User user=userDAO.updatePassword(userDetail);
+	    	
+	    	if(user==null)
+	    	{
+	    		responseMessage.setResult(null);
+	    		responseMessage.setStatus(HttpStatus.NOT_FOUND.value());
+	    		responseMessage.setStatusText("No User found with this details");
+			}
+	    	else
+	    	{
+	    		responseMessage.setResult(user);
+	    		responseMessage.setStatus(HttpStatus.OK.value());
+	    		responseMessage.setStatusText("Password Updated Successfully!!");
+	    		responseMessage.setTotalElements(1);
+			}
+			return responseMessage;
+		}
+		
 }
