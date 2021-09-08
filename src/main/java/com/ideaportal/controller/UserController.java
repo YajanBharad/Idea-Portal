@@ -39,7 +39,6 @@ import com.ideaportal.services.UserService;
 
 @RestController
 @RequestMapping(value = "/api")
-@CrossOrigin( origins ="http://localhost:4200" , allowedHeaders = "*")
 public class UserController {
 
 	
@@ -314,7 +313,7 @@ public class UserController {
    }
    
  //Function to update user password
-   @PutMapping(value ="/user/profile/update/password")
+   @PutMapping(value ="/profile/update/password")
    public ResponseEntity<ResponseMessage<User>> updateUserPassword(@RequestBody UserDTO userDTO)
    {
        User userDetail = modelMapper.map(userDTO, User.class);
