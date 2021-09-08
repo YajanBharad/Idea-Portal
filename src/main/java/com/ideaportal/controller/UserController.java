@@ -312,7 +312,7 @@ public class UserController {
    }
    
  //Function to update user password
-   @PutMapping(value = {"/user/profile/update/password", "/login/savePassword"})
+   @PutMapping(value ="/user/profile/update/password")
    public ResponseEntity<ResponseMessage<User>> updateUserPassword(@RequestBody UserDTO userDTO)
    {
        User userDetail = modelMapper.map(userDTO, User.class);
