@@ -39,6 +39,7 @@ public class IdeaPortal1Application extends SpringBootServletInitializer {
 	public ModelMapper modelMapper() {
 		return new ModelMapper();
 	}
+	//Cors Filter Implementation
 	@Bean
 	public FilterRegistrationBean<CorsFilter> corsFilter() {
 		FilterRegistrationBean<CorsFilter> registrationBean = new FilterRegistrationBean<>();
@@ -52,6 +53,7 @@ public class IdeaPortal1Application extends SpringBootServletInitializer {
 		registrationBean.setOrder(0);
 		return registrationBean;
 	}
+	//Token Generation
 	 @Bean
 	    public FilterRegistrationBean<AuthFilter> filterRegistrationBean() {
 	        final FilterRegistrationBean<AuthFilter> registrationBean = (FilterRegistrationBean<AuthFilter>)new FilterRegistrationBean<AuthFilter>();

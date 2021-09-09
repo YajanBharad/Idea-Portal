@@ -4,20 +4,21 @@ package com.ideaportal.dao;
 
 import java.sql.ResultSet;
 
+
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 
 import java.util.List;
 
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Repository;
-
 import com.ideaportal.exception.InvalidRoleException;
 import com.ideaportal.models.Comments;
 import com.ideaportal.models.Ideas;
@@ -63,15 +64,18 @@ public class UserDAO {
 	@Autowired
 	ThemesCategoryRepository themeCatRepo;
 	
+	
+	private static final Logger LOG = LoggerFactory.getLogger(UserDAO.class); 
+	
 	 public User saveUser(User userDetails) 
 	    {
-
+		 	LOG.info("Checking if Role No is correct");
 	    	Roles role=userDetails.getRoles();
 	    	
 	    	int roleID=role.getRoleId();
 	    	
 	    	if(roleID!= 1 && roleID != 2 && roleID!= 3) {
-	    		
+	    		LOG.error("Invalid Role Id only 1,2,3 allowed");
 				throw new InvalidRoleException("Invalid Role id was passed");
 			}
 	    	

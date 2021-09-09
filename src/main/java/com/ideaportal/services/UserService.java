@@ -1,5 +1,6 @@
 package com.ideaportal.services;
 import java.io.File;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -9,12 +10,13 @@ import java.nio.file.StandardCopyOption;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.ideaportal.dao.DaoUtils;
 import com.ideaportal.dao.UserDAO;
 import com.ideaportal.exception.InvalidRoleException;
@@ -45,7 +47,8 @@ public class UserService {
 	@Value("${ideaportal.jwt.expiration-time}")
 	public long jwtExpirationTime;
 	
-	
+	private static final Logger LOG = LoggerFactory.getLogger(UserService.class); 
+	//Generation of Token
 	  public String generateJWT(User user) 
 	    {
 	        long timestamp = System.currentTimeMillis(); //current time in milliseconds
@@ -79,18 +82,18 @@ public class UserService {
 	        ResponseMessage<User> responseMessage=new ResponseMessage<>();
 	        
 	        if(userNameCount>0) {
-	        	
+	        	LOG.error("User Name already exist");
 	        	throw new UserAuthException("User Name already is in use");
 			}
 
 	        if (emailCount > 0) {
-				
+	        	LOG.error("User Email already exist");
 	        	throw new UserAuthException("User Email already in use");
 			}
 	        
-	      
+	        LOG.info("Saving User into database");
 	        User user = userDAO.saveUser(userDetails);
-
+	        
 	        responseMessage.setResult(user);			//Returns the user object that is saved in the database
 	        responseMessage.setStatus(HttpStatus.CREATED.value());
 	        responseMessage.setStatusText("signup Sucessfully");
@@ -104,11 +107,11 @@ public class UserService {
 	    	User user=userDAO.isLoginCredentialsValid(userDetails);		//Checks whether valid credentials are passes or not
 	    	
 	    	if(user==null) {
-	    		
+	    		LOG.error("Invalid Credentials");
 				throw new UserAuthException("Invalid credentials");
 			}
 	        ResponseMessage<User> responseMessage =new ResponseMessage<>();
-	        
+	        LOG.info("Returning User details and token");
 	        responseMessage.setResult(user);		//Returns the object retrieved from the database
 	        responseMessage.setStatus(HttpStatus.OK.value());
 	        responseMessage.setStatusText("login Sucessfully");
@@ -123,6 +126,7 @@ public class UserService {
 			Ideas idea=userDAO.getIdea(ideaID);
 			if(idea==null)
 			{
+				LOG.error("Idea not found");
 				responseMessage.setResult(null);
 				responseMessage.setStatus(HttpStatus.NOT_FOUND.value());
 				responseMessage.setStatusText("Idea not found");
@@ -130,6 +134,7 @@ public class UserService {
 			}
 			else
 			{
+				LOG.info("Returning Idea of that id");
 				responseMessage.setResult(idea);
 				responseMessage.setStatus(HttpStatus.OK.value());
 				responseMessage.setStatusText("founded");
@@ -144,13 +149,13 @@ public class UserService {
 		public ResponseMessage<List<Themes>> getAllThemesResponseMessage() 
 		{
 			List<Themes> list=userDAO.getAllThemesList();
-			
 			ResponseMessage<List<Themes>> responseMessage=new ResponseMessage<>();
 			
 			int size=list.size();
 			
 			if(size==0)
 			{
+				LOG.error("NO themes present");
 				responseMessage.setResult(null);
 				responseMessage.setStatus(HttpStatus.OK.value());
 				responseMessage.setStatusText("OOPS!! No Themes been uploaded by Client Partner.Please try again later!!");
@@ -158,6 +163,7 @@ public class UserService {
 			}
 			else
 			{
+				LOG.info("Returning themes");
 				responseMessage.setResult(list);
 				responseMessage.setStatus(HttpStatus.OK.value());
 				responseMessage.setStatusText("List of all themes");
@@ -173,13 +179,14 @@ public class UserService {
 
 			if(list.isEmpty())
 			{
-				
+				LOG.error("NO ideas present");
 				responseMessage.setResult(null);
 				responseMessage.setStatus(HttpStatus.OK.value());
 				responseMessage.setStatusText("no idea submitted");
 			}
 			else
 			{
+				LOG.info("Returning ideas present in Themes");
 				responseMessage.setResult(list);
 				responseMessage.setStatus(HttpStatus.OK.value());
 				responseMessage.setStatusText("List all ideas");
@@ -194,6 +201,7 @@ public class UserService {
 			Comments dbComment=userDAO.saveComment(comment);
 			
 			if(dbComment==null) {
+				LOG.error("SOme error occured");
 				throw new Exception("Some error occurred, Please try again");
 			}
 			ResponseMessage<Comments> responseMessage=new ResponseMessage<>();
@@ -201,6 +209,7 @@ public class UserService {
 			responseMessage.setStatus(HttpStatus.CREATED.value());
 			responseMessage.setStatusText("Your comment was added");
 			responseMessage.setTotalElements(1);
+			LOG.info("Comment created on an idea");
 			return responseMessage;
 		}
 	
@@ -213,6 +222,7 @@ public class UserService {
 			int size=list.size();
 			if(size==0)
 			{
+				LOG.error("No Comment on this idea");
 				responseMessage.setResult(null);
 				responseMessage.setStatus(HttpStatus.OK.value());
 				responseMessage.setStatusText("No Comments to the idea yet");
@@ -221,6 +231,7 @@ public class UserService {
 			
 			else
 			{
+				LOG.info("Returning All Comments");
 				responseMessage.setResult(list);
 				responseMessage.setStatus(HttpStatus.OK.value());
 				responseMessage.setStatusText("List of all Comments");
@@ -237,11 +248,12 @@ public class UserService {
 			ResponseMessage<Likes> responseMessage=new ResponseMessage<>();
 			
 			if(like==null) {
-				
+				LOG.error("Idea was not liked");
 				throw new Exception("idea was not liked");
 			}
 			else
 			{
+				LOG.info("Idea liked successfully");
 				responseMessage.setResult(like);
 				responseMessage.setStatus(HttpStatus.CREATED.value());
 			
@@ -264,13 +276,14 @@ public class UserService {
 			
 			if(size==0)
 			{
-				
+				LOG.error("No likes on Idea");
 				responseMessage.setResult(null);
 				responseMessage.setStatus(HttpStatus.OK.value());
 				responseMessage.setStatusText("NO LIKES");
 			}
 			else
 			{
+				LOG.info("All Likes Returned");
 				responseMessage.setResult(list);
 				responseMessage.setStatus(HttpStatus.OK.value());
 				responseMessage.setStatusText("LIKES_LIST");
@@ -290,13 +303,14 @@ public class UserService {
 			
 			if(size==0)
 			{
-				
+				LOG.error("No Dislike on this idea");
 				responseMessage.setResult(null);
 				responseMessage.setStatus(HttpStatus.OK.value());
 				responseMessage.setStatusText("NO Dislikes");
 			}
 			else
 			{
+				LOG.info("All Dislikes of an idea returned");
 				responseMessage.setResult(list);
 				responseMessage.setStatus(HttpStatus.OK.value());
 				responseMessage.setStatusText("Dislike list");
@@ -313,6 +327,7 @@ public class UserService {
 			ParticipationResponse partresponse=userDAO.enrollResponse(participant);
 			
 			if(partresponse==null) {
+				LOG.error("Already participated in this idea");
 				ResponseMessage<ParticipationResponse> responseMessage=new ResponseMessage<>();
 				responseMessage.setResult(partresponse);
 				responseMessage.setStatus(HttpStatus.CREATED.value());
@@ -325,6 +340,7 @@ public class UserService {
 			responseMessage.setStatus(HttpStatus.CREATED.value());
 			responseMessage.setStatusText("Your participation is considered");
 			responseMessage.setTotalElements(1);
+			LOG.info("Your participation accepted");
 			return responseMessage;
 		}
 		
@@ -339,7 +355,7 @@ public class UserService {
 			
 			if(size==0)
 			{
-				
+				LOG.error("No participants present");
 				responseMessage.setResult(null);
 				responseMessage.setStatus(HttpStatus.OK.value());
 				responseMessage.setStatusText("NO Participants");
@@ -347,6 +363,7 @@ public class UserService {
 			}
 			else
 			{
+				LOG.info("All interested participants returned");
 				responseMessage.setResult(list);
 				responseMessage.setStatus(HttpStatus.OK.value());
 
@@ -369,13 +386,14 @@ public class UserService {
 			
 			if(size==0)
 			{
-				
+				LOG.error("No Categories present");
 				responseMessage.setResult(null);
 				responseMessage.setStatus(HttpStatus.OK.value());
 				responseMessage.setStatusText("No Categories present");
 			}
 			else
 			{
+				LOG.info("All All Themes Categories returned");
 				responseMessage.setResult(list);
 				responseMessage.setStatus(HttpStatus.OK.value());
 				responseMessage.setStatusText("All Themes Categories");
@@ -393,7 +411,7 @@ public class UserService {
 
 			if(list.isEmpty())
 			{
-
+				LOG.error("No ideas present");
 				responseMessage.setResult(null);
 				responseMessage.setStatus(HttpStatus.OK.value());
 				responseMessage.setStatusText("NO_IDEAS_SUBMITTED");
@@ -401,6 +419,7 @@ public class UserService {
 			}
 			else
 			{
+				LOG.info("All Ideas sorted according to likes");
 				responseMessage.setResult(list);
 				responseMessage.setStatus(HttpStatus.OK.value());
 				responseMessage.setStatusText("LIST_ALL_IDEAS");
@@ -418,7 +437,7 @@ public class UserService {
 
 			if(list.isEmpty())
 			{
-
+				LOG.error("No ideas present");
 				responseMessage.setResult(null);
 				responseMessage.setStatus(HttpStatus.OK.value());
 				responseMessage.setStatusText("NO_IDEAS_SUBMITTED");
@@ -426,6 +445,7 @@ public class UserService {
 			}
 			else
 			{
+				LOG.info("All Ideas sorted according to comment");
 				responseMessage.setResult(list);
 				responseMessage.setStatus(HttpStatus.OK.value());
 				responseMessage.setStatusText("LIST_ALL_IDEAS");
@@ -438,6 +458,7 @@ public class UserService {
 		public ResponseMessage<User> saveUserPasswordResponseMessage(User userDetail) 
 		{
 	    	if (utils.isEqualToOldPassword(userDetail)) {
+	    		LOG.error("This password has been used by you earlier! Enter new Password");
 				throw new UserAuthException("This password has been used by you earlier! Enter new Password");
 			}
 	    	ResponseMessage<User> responseMessage=new ResponseMessage<>();
@@ -446,6 +467,7 @@ public class UserService {
 	    	
 	    	if(user==null)
 	    	{
+	    		LOG.error("No user found with this details");
 	    		responseMessage.setResult(null);
 	    		responseMessage.setStatus(HttpStatus.NOT_FOUND.value());
 	    		responseMessage.setStatusText("No User found with this details");
@@ -457,6 +479,7 @@ public class UserService {
 	    		responseMessage.setStatusText("Password Updated Successfully!!");
 	    		responseMessage.setTotalElements(1);
 			}
+	    	LOG.info("Password changed successfully");
 			return responseMessage;
 		}
 		
